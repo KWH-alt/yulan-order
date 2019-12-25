@@ -736,6 +736,7 @@ export default {
       this.customerData = [];
       this.tableData = [];
       this.value_4 = [];
+      this.query_1 = false;
       if(this.first == ""){
         this.$alert("未选择区域", "提示", {
             confirmButtonText: "确定",
@@ -868,10 +869,17 @@ export default {
         },{ loading: false })
         this.getSomeData = res2.data[0]
         if(res2.data.length == 0){
-          // this.$alert("选择客户无订单", "提示", {
-          //   confirmButtonText: "确定",
-          //   type: "success"
-          // });
+          // var res3 = await getOrderInfoByCustomer({
+          // customer: this.value_4[i] + "A", //已选用户
+          // },{ loading: false })
+          // this.getSomeData = res3.data[0]
+          // // this.$alert("选择客户无订单", "提示", {
+          // //   confirmButtonText: "确定",
+          // //   type: "success"
+          // // });
+          // if(res3.data.length == 0){
+          //   continue
+          // }
           continue
         }
         var sum = this.moneySum + reduce
