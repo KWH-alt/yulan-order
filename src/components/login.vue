@@ -54,7 +54,10 @@
           </div>
         </div>
       </div>
-      <div class="bottomButton" v-if="Global.webTitle != Global.sysTitle.supply.webTitle">
+      <div
+        class="bottomButton"
+        v-if="Global.webTitle != Global.sysTitle.supply.webTitle"
+      >
         <div class="bottomBtn" @click="maskShow = true">
           <img
             src="../assets/img/img/Android.png"
@@ -63,13 +66,13 @@
           />
           <span style="vertical-align:middle">安卓版下载 ></span>
         </div>
-        <div class="bottomBtn">
+        <div class="bottomBtn" @click="maskShow2 = true">
           <img
             src="../assets/img/img/Apple.png"
             style="vertical-align:middle;"
             width="23"
           />
-          <span style="vertical-align:middle">苹果版敬请期待</span>
+          <span style="vertical-align:middle">苹果版下载 ></span>
         </div>
       </div>
     </div>
@@ -82,6 +85,14 @@
     <div v-if="maskShow" class="photoMask" @click="maskShow = false">
       <div class="photoMaskContain">
         <img style="width:320px;" src="../assets/img/QRCode.png" alt="" />
+        <div style="color:white;margin:top:20px;font-size:18px;">
+          手机扫一扫即可下载
+        </div>
+      </div>
+    </div>
+    <div v-if="maskShow2" class="photoMask" @click="maskShow2 = false">
+      <div class="photoMaskContain">
+        <img style="width:320px;" src="../assets/img/QRCode-IOS.png" alt="" />
         <div style="color:white;margin:top:20px;font-size:18px;">
           手机扫一扫即可下载
         </div>
@@ -103,6 +114,7 @@ export default {
       cid: "", //用户账号
       password: "", //用户密码
       maskShow: false,
+      maskShow2: false,
       rememberPassWord: true,
       autoSign: true
     };
@@ -153,7 +165,7 @@ export default {
           let companyId;
           Cookies.set("cid", cid);
           sessionStorage.setItem("_userId", cid);
-          if(res.pos) res.data.pos = res.pos;
+          if (res.pos) res.data.pos = res.pos;
           Cookies.set("userInfo", res.data);
           Cookies.set("isManager", res.data.isManager);
           Cookies.set("realName", res.data.realName);
@@ -222,7 +234,7 @@ export default {
   bottom: 3.5%;
   right: 2%;
 }
-.kuaidi100{
+.kuaidi100 {
   position: fixed;
   bottom: 3.5%;
   left: 2%;
