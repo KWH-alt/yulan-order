@@ -1861,10 +1861,13 @@ export default {
             url: list[i]
           });
         }
-        var findIndex = list[list.length - 2].lastIndexOf("-");
-        this.fileNumber = parseInt(
-          list[list.length - 2].substr(findIndex + 1, 1)
+        if(list.length>=2)
+        {
+            var findIndex = list[list.length - 2].lastIndexOf("-");
+            this.fileNumber = parseInt(
+            list[list.length - 2].substr(findIndex + 1, 1)
         );
+        }
         //查询时，将对应初审意见的附件的字段拆解开来，并作为对象传入文件集合中
         var list2 = this.submit.FIRST_AUDITION_FILE.split(";");
         for (var i = 0; i < list2.length - 1; i++) {
