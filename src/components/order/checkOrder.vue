@@ -2,29 +2,11 @@
   <el-card class="centerCard">
     <div>
       <!-- 地址管理信息 -->
-      <el-dialog
-        width="70%"
-        @close="dialogClose"
-        title="管理收货信息"
-        :visible.sync="dialogFormVisible"
-      >
+      <el-dialog width="70%" @close="dialogClose" title="管理收货信息" :visible.sync="dialogFormVisible">
         <el-button @click="clickNew()" type="success">添加地址</el-button>
-        <el-table
-          border
-          :data="data"
-          style="width: 100%"
-          :row-class-name="tableRowClassName"
-        >
-          <el-table-column
-            prop="wlContacts"
-            label="收货人"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="wlTel"
-            label="联系电话"
-            align="center"
-          ></el-table-column>
+        <el-table border :data="data" style="width: 100%" :row-class-name="tableRowClassName">
+          <el-table-column prop="wlContacts" label="收货人" align="center"></el-table-column>
+          <el-table-column prop="wlTel" label="联系电话" align="center"></el-table-column>
           <el-table-column label="收货地址">
             <template slot-scope="scope">
               <span>{{ scope.row.province }}</span>
@@ -35,156 +17,133 @@
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-button
-                v-show="scope.row.addressId != 0"
-                @click="editIt(scope.row)"
-                type="warning"
-                size="small"
-                >编辑</el-button
-              >
-              <el-button
-                v-show="scope.row.addressId != 0"
-                @click="deleteIt(scope.row)"
-                type="danger"
-                size="small"
-                >删除</el-button
-              >
+              <el-button v-show="scope.row.addressId != 0" @click="editIt(scope.row)" type="warning" size="small">编辑
+              </el-button>
+              <el-button v-show="scope.row.addressId != 0" @click="deleteIt(scope.row)" type="danger" size="small">删除
+              </el-button>
               <span v-show="scope.row.addressId === 0">默认地址不可操作</span>
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog
-          width="60%"
-          title="地址管理"
-          @close="clearRule('form')"
-          :visible.sync="innerVisible"
-          append-to-body
-        >
-          <el-select
-            @change="getCity()"
-            style="width:30%;"
-            v-model="value"
-            placeholder="请选择省份"
-          >
-            <el-option
-              v-for="(item, index) in province"
-              :key="index"
-              :label="item.regionName"
-              :value="index"
-            ></el-option>
+        <el-dialog width="60%" title="地址管理" @close="clearRule('form')" :visible.sync="innerVisible" append-to-body>
+          <el-select @change="getCity()" style="width:30%;" v-model="value" placeholder="请选择省份">
+            <el-option v-for="(item, index) in province" :key="index" :label="item.regionName" :value="index">
+            </el-option>
           </el-select>
-          <el-select
-            @change="getCountry()"
-            style="width:30%;"
-            v-model="value2"
-            placeholder="请选择城市"
-          >
-            <el-option
-              v-for="(item, index) in city"
-              :key="index"
-              :label="item.regionName"
-              :value="index"
-            ></el-option>
+          <el-select @change="getCountry()" style="width:30%;" v-model="value2" placeholder="请选择城市">
+            <el-option v-for="(item, index) in city" :key="index" :label="item.regionName" :value="index"></el-option>
           </el-select>
-          <el-select
-            @change="printfCountry()"
-            style="width:30%;"
-            v-model="value3"
-            placeholder="请选择县区"
-          >
-            <el-option
-              v-for="(item, index) in country"
-              :key="index"
-              :label="item.regionName"
-              :value="index"
-            ></el-option>
+          <el-select @change="printfCountry()" style="width:30%;" v-model="value3" placeholder="请选择县区">
+            <el-option v-for="(item, index) in country" :key="index" :label="item.regionName" :value="index">
+            </el-option>
           </el-select>
           <div>
-            <el-form
-              :model="form"
-              ref="form"
-              class="demo-ruleForm"
-              :rules="formRules"
-            >
-              <el-form-item
-                label="详细地址"
-                :label-width="formLabelWidth"
-                prop="address"
-              >
-                <el-input
-                  style="width:90%;"
-                  v-model="form.address"
-                  autocomplete="off"
-                  placeholder="请输入详细地址"
-                ></el-input>
+            <el-form :model="form" ref="form" class="demo-ruleForm" :rules="formRules">
+              <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
+                <el-input style="width:90%;" v-model="form.address" autocomplete="off" placeholder="请输入详细地址"></el-input>
               </el-form-item>
-              <el-form-item
-                label="收货人"
-                :label-width="formLabelWidth"
-                prop="name"
-              >
-                <el-input
-                  style="width:90%;"
-                  v-model="form.name"
-                  autocomplete="off"
-                  placeholder="请输入收货人姓名"
-                ></el-input>
+              <el-form-item label="收货人" :label-width="formLabelWidth" prop="name">
+                <el-input style="width:90%;" v-model="form.name" autocomplete="off" placeholder="请输入收货人姓名"></el-input>
               </el-form-item>
-              <el-form-item
-                label="联系电话"
-                :label-width="formLabelWidth"
-                prop="telephone"
-              >
-                <el-input
-                  style="width:90%;"
-                  v-model="form.telephone"
-                  autocomplete="off"
-                  placeholder="请输入联系电话"
-                ></el-input>
+              <el-form-item label="联系电话" :label-width="formLabelWidth" prop="telephone">
+                <el-input style="width:90%;" v-model="form.telephone" autocomplete="off" placeholder="请输入联系电话">
+                </el-input>
               </el-form-item>
             </el-form>
-            <el-button
-              v-if="chageOrAdd"
-              type="danger"
-              @click="changeAddress('form')"
-              >确认修改</el-button
-            >
-            <el-button v-else type="success" @click="NewAddress('form')"
-              >确认添加</el-button
-            >
+            <el-button v-if="chageOrAdd" type="danger" @click="changeAddress('form')">确认修改</el-button>
+            <el-button v-else type="success" @click="NewAddress('form')">确认添加</el-button>
           </div>
         </el-dialog>
       </el-dialog>
       <!-- 查看使用记录 -->
-      <el-dialog
-        :title="'优惠券使用记录[券号:' + useTable.couponId + ']'"
-        :visible.sync="dialogUse"
-        width="60%"
-        top="5vh"
-      >
+      <el-dialog :title="'优惠券使用记录[券号:' + useTable.couponId + ']'" :visible.sync="dialogUse" width="60%" top="5vh">
         <keep-alive>
-          <useRecordDetail
-            v-if="dialogUse"
-            :useTable="useTable"
-          ></useRecordDetail>
+          <useRecordDetail v-if="dialogUse" :useTable="useTable"></useRecordDetail>
         </keep-alive>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogUse = false">关闭</el-button>
         </span>
       </el-dialog>
       <!-- 查看返利记录 -->
-      <el-dialog
-        :title="'优惠券返利记录[券号:' + backTable.couponId + ']'"
-        :visible.sync="dialogBack"
-        width="60%"
-        top="5vh"
-      >
+      <el-dialog :title="'优惠券返利记录[券号:' + backTable.couponId + ']'" :visible.sync="dialogBack" width="60%" top="5vh">
         <couponRecordDetail :backTable="backTable"></couponRecordDetail>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogBack = false">关闭</el-button>
         </span>
       </el-dialog>
+      <!-- 维护购买人 -->
+      <el-dialog :visible.sync="buyUserVisible" title="管理购买用户" :close-on-click-modal="false" width="1000px">
+        <div style="margin-bottom:2px;">
+          <el-input @keyup.enter.native="searchBuyUser()" size="medium" placeholder="输入用户姓名/地址" v-model="condition"
+            style="width:350px;">
+            <el-button @click="searchBuyUser()" slot="append" icon="el-icon-search">搜索</el-button>
+          </el-input>
+          <el-button style="margin-left:20px;" size="medium" @click="addBuyUserShow()" type="primary">新增购买用户信息
+          </el-button>
+          <div style="color:darkgrey;">*双击填充到购买人信息</div>
+        </div>
+        <div>
+          <el-table border :data="buyUserInfoData" style="width: 100%" height="400" :row-class-name="tableRowClassName"
+            @row-dblclick="handleRowDBClick">
+            <el-table-column width="130" prop="BUYUSER" label="用户姓名" align="center"></el-table-column>
+            <el-table-column width="130" prop="BUYUSER_PHONE" label="用户电话" align="center"></el-table-column>
+            <el-table-column label="地址" align="center">
+              <template slot-scope="scope">
+                {{splitAddress(scope.row)}}
+              </template>
+            </el-table-column>
+            <el-table-column width="150" label="操作">
+              <template slot-scope="scope">
+                <el-button @click="editBuyUserShow(scope.row)" type="primary" icon="el-icon-edit" size="mini" circle>
+                </el-button>
+                <el-button @click="deleteBuyUser(scope.row)" type="danger" icon="el-icon-delete" size="mini" circle>
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-dialog>
+      <!-- 新增/编辑购买人 -->
+      <el-dialog width="650px" @close="clearData" :title="addOrNot?'新增购买用户':'编辑购买用户'" v-if="addBuyUserVisible"
+        :visible.sync="addBuyUserVisible" append-to-body>
+        <el-form size="small" :model="buyUserModel" label-width="100px" ref="buyUserForm" :rules="add_rules">
+          <el-form-item label="用户姓名" prop="BUYUSER">
+            <el-input style="width:250px;" v-model="buyUserModel.BUYUSER">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="联系电话" prop="BUYUSER_PHONE">
+            <el-input style="width:250px;" v-model="buyUserModel.BUYUSER_PHONE">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="所在地区">
+            <el-select @change="getCity2" style="width:150px;" v-model="buyUserModel.PROVINCE_ID" placeholder="请选择省份">
+              <el-option v-for="(item, index) in province" :key="index" :label="item.regionName" :value="item.regionId">
+              </el-option>
+            </el-select>
+            <el-select @change="getCountry2" style="width:150px;" v-model="buyUserModel.CITY_ID" placeholder="请选择城市">
+              <el-option v-for="(item, index) in city" :key="index" :label="item.regionName" :value="item.regionId">
+              </el-option>
+            </el-select>
+            <el-select @change="printfCountry2" style="width:150px;" v-model="buyUserModel.COUNTRY_ID"
+              placeholder="请选择县区">
+              <el-option v-for="(item, index) in country" :key="index" :label="item.regionName" :value="item.regionId">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-input style="width:450px;" v-model="buyUserModel.POST_ADDRESS">
+            </el-input>
+          </el-form-item>
+          <el-form-item style="text-align:center;margin-right:100px;">
+            <el-button size="medium" @click="addBuyUserVisible = false">取&nbsp;&nbsp;消</el-button>
+            <el-button type="primary" size="medium" @click="onSaveTaskClick" style="margin-left:30px;">保&nbsp;&nbsp;存
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
     </div>
+
     <el-card shadow="hover">
       <div slot="header">
         <span class="zoomLeft">甲方：</span>
@@ -192,9 +151,7 @@
         <span class="zoomLeft">乙方：</span>
         <span class="zoomRight">{{ realName }}</span>
         <span class="zoomLeft">经办人：</span>
-        <span class="zoomRight"
-          >{{ chargeData.CUSTOMER_AGENT }}({{ chargeData.OFFICE_TEL }})</span
-        >
+        <span class="zoomRight">{{ chargeData.CUSTOMER_AGENT }}({{ chargeData.OFFICE_TEL }})</span>
       </div>
 
       <div class="grayDiv">
@@ -202,110 +159,83 @@
           <legend>发货信息</legend>
           <div :class="overflow">
             <p v-for="(item, index) of data" :key="index">
-              <el-radio
-                @change="showAddress"
-                v-model="radio"
-                :label="index"
-                border
-                >{{ item.wlContacts }} ({{ item.wlTel }}) {{ item.province
+              <el-radio @change="showAddress" v-model="radio" :label="index" border>{{ item.wlContacts }}
+                ({{ item.wlTel }}) {{ item.province
                 }}{{ item.city }}{{ item.country
-                }}{{ item.postAddress }}</el-radio
-              >
-              <span
-                v-if="item.addressId === 0"
-                style="color:tomato; font-weight:bold;"
-                >默认地址</span
-              >
+                }}{{ item.postAddress }}</el-radio>
+              <span v-if="item.addressId === 0" style="color:tomato; font-weight:bold;">默认地址</span>
             </p>
           </div>
           <p style="font-weight:bold;">
-            <span class="charge" @click.prevent="showAddress"
-              ><div style="width:250px;display:inline-block;">
+            <span class="charge" @click.prevent="showAddress">
+              <div style="width:250px;display:inline-block;">
                 {{ addressAppear }}
-              </div></span
-            >
-            <span
-              @click.prevent="dialogOpen"
-              class="charge"
-              style="float:right;margin-right:20px;"
-            >
+              </div>
+            </span>
+            <span @click.prevent="dialogOpen" class="charge" style="float:right;margin-right:20px;">
               管理收货地址
             </span>
           </p>
 
           <!-- 配送信息 -->
           <span>选择配送方式：</span>
-          <el-select
-            @change="changePeiSong"
-            style="width:300px; display:inline-block;"
-            v-model="ctm_order.deliveryType"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.deliveryType"
-              :label="item.label"
-              :value="item.deliveryType"
-              :disabled="item.disabled"
-            ></el-option>
+          <el-select @change="changePeiSong" style="width:300px; display:inline-block;" v-model="ctm_order.deliveryType"
+            placeholder="请选择">
+            <el-option v-for="item in options" :key="item.deliveryType" :label="item.label" :value="item.deliveryType"
+              :disabled="item.disabled"></el-option>
           </el-select>
           <span style="margin-left:50px;">物流公司：</span>
-          <el-input
-            style="width:300px;"
-            :disabled="this.ctm_order.deliveryType == 3 ? false : true"
-            v-model="ctm_order.deliveryNotes"
-            placeholder="物流备注"
-          ></el-input>
+          <el-input style="width:300px;" :disabled="this.ctm_order.deliveryType == 3 ? false : true"
+            v-model="ctm_order.deliveryNotes" placeholder="物流备注"></el-input>
         </fieldset>
+
         <fieldset>
           <legend>购买用户信息</legend>
           <span>用户姓名：</span>
-          <el-input
-            style="width:330px;"
-            v-model="ctm_order.buyUser"
-            placeholder="请输入用户姓名"
-          ></el-input>
+          <el-input style="width:330px;" v-model="ctm_order.buyUser" placeholder="请输入用户姓名"></el-input>
           <span style="display:inline-block;margin-left:50px;">用户电话：</span>
-          <el-input
-            style="width:300px;"
-            v-model="ctm_order.buyUserPhone"
-            placeholder="请输入用户电话"
-          ></el-input>
+          <el-input style="width:300px;" v-model="ctm_order.buyUserPhone" placeholder="请输入用户电话"></el-input>
+          <span @click.prevent="buyUserShow" class="charge" style="float:right;margin-right:20px;font-weight:bold;">
+            管理购买用户信息
+          </span>
           <br />
-          <span>用户地址：</span>
-          <el-input
-            style="width:770px;margin-top:10px;"
-            v-model="ctm_order.buyUserAddress"
-            placeholder="请输入用户地址"
-          ></el-input>
           <br />
-          <span style="vertical-align:middle;">上传购买凭证：</span>
-          <el-upload
-            class="upload-de"
-            style="display:inline-block;vertical-align:middle;margin-top:10px;"
-            :action="Global.baseUrl + '/CTM_ORDER/UploadBuyUserFiles'"
-            list-type="picture-card"
-            :on-change="handleChange"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-            :before-upload="beforeAvatarUpload"
-            :file-list="fileList"
-            :data="{ cid: cid }"
-          >
+          <span>选择地区：</span>
+          <el-select @change="getCity3" style="width:250px;" v-model="ctm_order.buyUserArea1" placeholder="请选择省份">
+            <el-option v-for="(item, index) in provinceData" :key="index" :label="item.regionName"
+              :value="item.regionName">
+            </el-option>
+          </el-select>
+          <el-select @change="getCountry3" style="width:250px;" v-model="ctm_order.buyUserArea2" placeholder="请选择城市">
+            <el-option v-for="(item, index) in cityData" :key="index" :label="item.regionName" :value="item.regionName">
+            </el-option>
+          </el-select>
+          <el-select style="width:250px;" v-model="ctm_order.buyUserArea3" placeholder="请选择县区">
+            <el-option v-for="(item, index) in countryData" :key="index" :label="item.regionName"
+              :value="item.regionName">
+            </el-option>
+          </el-select>
+          <br />
+          <span>详细地址：</span>
+          <el-input style="width:770px;margin-top:10px;" v-model="ctm_order.buyUserPostAddress" placeholder="请输入用户地址">
+          </el-input>
+          <br />
+          <div style="display:inline-block;vertical-align:middle;margin:10px 10px 0 0;">
+            <div style="margin:auto;">上传购买凭证：</div>
+            <span style="font-size:13px;color:grey;vertical-align:middle;">(消费者在门店的订货单)</span>
+          </div>
+          <el-upload class="upload-de" style="display:inline-block;vertical-align:middle;margin-top:10px;"
+            :action="Global.baseUrl + '/CTM_ORDER/UploadBuyUserFiles'" list-type="picture-card"
+            :on-change="handleChange" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+            :before-upload="beforeAvatarUpload" :file-list="fileList" :data="{ cid: cid }">
             <i class="el-icon-plus"></i>
           </el-upload>
         </fieldset>
+
         <fieldset>
           <legend>备注信息</legend>
-          <el-input
-            type="textarea"
-            maxlength="140"
-            style="width:100%"
-            :autosize="{ minRows: 3, maxRow: 4 }"
-            resize="none"
-            v-model="ctm_order.notes"
-            placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"
-          ></el-input>
+          <el-input type="textarea" maxlength="140" style="width:100%" :autosize="{ minRows: 3, maxRow: 4 }"
+            resize="none" v-model="ctm_order.notes" placeholder="请输入订单备注(140字符以内，任何发货信息写在备注无效！)"></el-input>
           <span style="color:#ccc">{{ ctm_order.notes | calLength }}/140</span>
         </fieldset>
         <!-- <div v-if="packingShow">
@@ -322,52 +252,26 @@
           </el-radio-group>
         </div>
         <br /> -->
+
         <fieldset>
           <legend>工程报备单号</legend>
-          <el-input
-            style="width:400px"
-            v-model="ctm_order.projectNo"
-            placeholder="请输入工程报备单号"
-          ></el-input>
+          <el-input style="width:400px" v-model="ctm_order.projectNo" placeholder="请输入工程报备单号"></el-input>
         </fieldset>
       </div>
       <el-dialog :visible.sync="dialogImageVisible">
         <img width="100%" :src="dialogImageUrl" alt="" />
       </el-dialog>
-      <el-table
-        :data="ORDERBODY"
-        border
-        style="width: 100%"
-        :row-class-name="tableRowClassName"
-      >
-        <el-table-column
-          prop="itemNo"
-          align="center"
-          label="型号"
-        ></el-table-column>
+      <el-table :data="ORDERBODY" border style="width: 100%" :row-class-name="tableRowClassName">
+        <el-table-column prop="itemNo" align="center" label="型号"></el-table-column>
         <!-- :formatter="FixIt"  -->
         <el-table-column align="center" label="数量">
           <template slot-scope="scope1">
             <span>{{ scope1.row.qtyRequired }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="unit"
-          align="center"
-          label="单位"
-        ></el-table-column>
-        <el-table-column
-          prop="promotion"
-          align="center"
-          label="活动类型"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="partSendId"
-          align="center"
-          :formatter="formatRole"
-          label="发货说明"
-        ></el-table-column>
+        <el-table-column prop="unit" align="center" label="单位"></el-table-column>
+        <el-table-column prop="promotion" align="center" label="活动类型" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="partSendId" align="center" :formatter="formatRole" label="发货说明"></el-table-column>
         <el-table-column align="center" label="实际金额">
           <template slot-scope="scope1">
             <span v-if="isManager === '0'">***</span>
@@ -410,19 +314,12 @@
     <el-card shadow="never">
       <el-collapse v-model="activeNames">
         <el-collapse-item title="使用优惠券/礼品卡" name="1">
-          <div
-            v-for="(item, index) of couponData"
-            :key="index"
-            :class="item.canUse ? switchClass.cctv : switchClass.cctvF"
-          >
+          <div v-for="(item, index) of couponData" :key="index"
+            :class="item.canUse ? switchClass.cctv : switchClass.cctvF">
             <div class="couponHead">
-              <div
-                :class="item.canUse ? switchClass.logo : switchClass.logoF"
-              ></div>
+              <div :class="item.canUse ? switchClass.logo : switchClass.logoF"></div>
               <div class="logoTxt">
-                <p
-                  style="color:white; font-size:15px; padding-top:5px; font-weight:bold; letter-spacing:2px;"
-                >
+                <p style="color:white; font-size:15px; padding-top:5px; font-weight:bold; letter-spacing:2px;">
                   {{ item.notes }}
                 </p>
                 <span>总返利&nbsp;{{ item.rebateMoney }}元</span>
@@ -431,46 +328,33 @@
             </div>
 
             <div class="couponBody">
-              <p
-                style="text-align:center"
-                :class="
+              <p style="text-align:center" :class="
                   item.canUse ? switchClass.transTxt : switchClass.transTxtF
-                "
-              >
+                ">
                 <span style="font-size:18px;">余额￥</span>
                 <span v-if="isManager === '0'">***</span>
                 <span v-else>{{ item.rebateMoneyOver }}</span>
               </p>
               <div style="margin:0 auto; width:245px;">
-                <div
-                  :class="
+                <div :class="
                     item.canUse
                       ? switchClass.roundedRectangle
                       : switchClass.roundedRectangleF
-                  "
-                >
+                  ">
                   <p>
                     &nbsp;&nbsp;&nbsp;有效期：{{
                       item.dateStart | datatrans
                     }}至{{ item.dateEnd | datatrans }}
                   </p>
                 </div>
-                <el-checkbox
-                  :disabled="!item.canUse"
-                  v-model="couponStatus[index]"
-                  @change="
+                <el-checkbox :disabled="!item.canUse" v-model="couponStatus[index]" @change="
                     changeCoupon(couponStatus[index], item.id, item.rebateType)
-                  "
-                ></el-checkbox>
+                  "></el-checkbox>
               </div>
               <p style="text-align:center;">适用：{{ item.application }}</p>
               <div class="Record" style="text-align:center">
-                <span @click="RecordUse(item.id)" style="cursor: pointer;"
-                  >查看使用记录>>&nbsp;&nbsp;&nbsp;</span
-                >
-                <span @click="RecordBack(item.id)" style="cursor: pointer;"
-                  >查看返利记录>></span
-                >
+                <span @click="RecordUse(item.id)" style="cursor: pointer;">查看使用记录>>&nbsp;&nbsp;&nbsp;</span>
+                <span @click="RecordBack(item.id)" style="cursor: pointer;">查看返利记录>></span>
               </div>
             </div>
             <div style="margin-left:20px;" v-if="!item.canUse">
@@ -496,17 +380,8 @@
           <span v-if="isManager === '0'">***</span>
           <span v-else>{{ allSpend | priceFilter }}</span>
         </p>
-        <el-button @click="backToOrder" size="medium" type="success" plain
-          >返回订单</el-button
-        >
-        <el-button
-          v-if="curtainStatus == '0'"
-          @click="payIt"
-          size="medium"
-          type="danger"
-          plain
-          >立即提交</el-button
-        >
+        <el-button @click="backToOrder" size="medium" type="success" plain>返回订单</el-button>
+        <el-button v-if="curtainStatus == '0'" @click="payIt" size="medium" type="danger" plain>立即提交</el-button>
         <!-- <el-button
           v-if="curtainStatus =='1'"
           @click="payCurtain()"
@@ -514,14 +389,7 @@
           type="danger"
           plain
         >确认提交</el-button>-->
-        <el-button
-          v-if="curtainStatus == '3'"
-          @click="payNew"
-          size="medium"
-          type="danger"
-          plain
-          >确认提交</el-button
-        >
+        <el-button v-if="curtainStatus == '3'" @click="payNew" size="medium" type="danger" plain>确认提交</el-button>
       </div>
     </el-card>
   </el-card>
@@ -547,7 +415,11 @@ import {
   normalOrderSettlement,
   getUseRecord,
   getCustomerInfo,
-  GetPromotionsById
+  GetPromotionsById,
+  GetBuyUserInfo,
+  InsertBuyUser,
+  UpdateBuyUser,
+  DeleteBuyUser
 } from "@/api/orderListASP";
 import { deleteCurtain } from "@/api/curtain";
 import Axios from "axios";
@@ -572,6 +444,21 @@ export default {
       //返利弹窗
       dialogUse: false,
       dialogBack: false,
+      buyUserVisible: false,
+      addBuyUserVisible: false,
+      buyUserInfoData: [],
+      buyUserModel: {},
+      currentPage: 1,
+      limit: 10,
+      count: 0,
+      condition: "",
+      addOrNot: false,
+      add_rules: {
+        BUYUSER: [{ required: true, message: "请填写姓名", trigger: "blur" }],
+        BUYUSER_PHONE: [
+          { required: true, message: "请填写电话", trigger: "blur" }
+        ]
+      },
       useTable: [],
       backTable: [],
       couponStatus: [false, false],
@@ -601,6 +488,10 @@ export default {
         buyUserPhone: "",
         buyUserAddress: "",
         buyUserPicture: "",
+        buyUserArea1: "",
+        buyUserArea2: "",
+        buyUserArea3: "",
+        buyUserPostAddress: "",
         notes: "",
         deliveryNotes: "",
         deliveryType: "1",
@@ -626,21 +517,12 @@ export default {
           label: "其它物流公司(运费由乙方负责)"
         }
       ],
-      province: [
-        {
-          regionName: "省份加载中"
-        }
-      ],
-      city: [
-        {
-          regionName: "城市加载中"
-        }
-      ],
-      country: [
-        {
-          regionName: "区域加载中"
-        }
-      ],
+      province: [],
+      city: [],
+      country: [],
+      provinceData: [],
+      cityData: [],
+      countryData: [],
       value: "",
       value2: "",
       value3: "",
@@ -749,6 +631,10 @@ export default {
     //清除表单验证规则
     clearRule(formName) {
       this.$refs[formName].resetFields();
+    },
+    clearData() {
+      this.country = [];
+      this.city = [];
     },
     //清空下拉框
     changePeiSong() {
@@ -1027,6 +913,27 @@ export default {
       this.form.thequ = this.country[country].regionName;
       this.form.quID = this.country[country].regionId;
     },
+    printfCountry2(value) {
+      var country = this.country.filter(item => item.regionId == value)[0];
+      this.buyUserModel.COUNTRY = country.regionName;
+    },
+    refreshCountry(regionId, regionName) {
+      Axios.post(
+        "/areaRegion/getCountry.do",
+        {
+          regionId: regionId,
+          regionName: regionName
+        },
+        { loading: false }
+      )
+        .then(res => {
+          this.country = res.data.country;
+          this.countryData = res.data.country;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //获取区县
     getCountry() {
       this.value3 = "";
@@ -1035,12 +942,34 @@ export default {
       var city = this.value2;
       this.form.theshi = this.city[city].regionName;
       this.form.shiID = this.city[city].regionId;
-      Axios.post("/areaRegion/getCountry.do", {
-        regionId: this.city[city].regionId,
-        regionName: this.city[city].regionName
-      })
+      this.refreshCountry(this.city[city].regionId, this.city[city].regionName);
+    },
+    getCountry2(value) {
+      this.buyUserModel.COUNTRY = "";
+      this.buyUserModel.COUNTRY_ID = "";
+      this.country = [];
+      var city = this.city.filter(item => item.regionId == value)[0];
+      this.buyUserModel.CITY = city.regionName;
+      this.refreshCountry(city.regionId, city.regionName);
+    },
+    getCountry3(value) {
+      this.ctm_order.buyUserArea3 = "";
+      this.countryData = [];
+      var city = this.city.filter(item => item.regionName == value)[0];
+      this.refreshCountry(city.regionId, city.regionName);
+    },
+    refreshCity(regionId, regionName) {
+      Axios.post(
+        "/areaRegion/getCity.do",
+        {
+          regionId: regionId,
+          regionName: regionName
+        },
+        { loading: false }
+      )
         .then(res => {
-          this.country = res.data.country;
+          this.city = res.data.city;
+          this.cityData = res.data.city;
         })
         .catch(error => {
           console.log(error);
@@ -1057,22 +986,40 @@ export default {
       var shengfen = this.value;
       this.form.theSheng = this.province[shengfen].regionName;
       this.form.shengID = this.province[shengfen].regionId;
-      Axios.post("/areaRegion/getCity.do", {
-        regionId: this.province[shengfen].regionId,
-        regionName: this.province[shengfen].regionName
-      })
-        .then(res => {
-          this.city = res.data.city;
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      this.refreshCity(
+        this.province[shengfen].regionId,
+        this.province[shengfen].regionName
+      );
+    },
+    getCity2(value) {
+      //新增
+      this.buyUserModel.CITY = "";
+      this.buyUserModel.CITY_ID = "";
+      this.buyUserModel.COUNTRY = "";
+      this.buyUserModel.COUNTRY_ID = "";
+      this.city = [];
+      this.country = [];
+      var shengfen = this.province.filter(item => item.regionId == value)[0];
+      this.buyUserModel.PROVINCE = shengfen.regionName;
+      this.refreshCity(shengfen.regionId, shengfen.regionName);
+    },
+    getCity3(value) {
+      //新增
+      this.ctm_order.buyUserArea2 = "";
+      this.ctm_order.buyUserArea3 = "";
+      this.cityData = [];
+      this.countryData = [];
+      var shengfen = this.provinceData.filter(
+        item => item.regionName == value
+      )[0];
+      this.refreshCity(shengfen.regionId, shengfen.regionName);
     },
     //获取省份
     getProvince() {
       Axios.post("/areaRegion/getProvince.do", {})
         .then(res => {
           this.province = res.data.province;
+          this.provinceData = res.data.province;
         })
         .catch(error => {
           console.log(error);
@@ -1259,7 +1206,6 @@ export default {
         }
       }
     },
-
     //预留算法 获取活动价
     huodongjia() {
       let getPush = JSON.parse(sessionStorage.getItem("shopping"));
@@ -1441,6 +1387,8 @@ export default {
         for (var i = 0; i < getPush3.length; i++) {
           deleteArray[i] = getPush3[i].cartItemId;
         }
+        //地址
+        this.ctm_order.buyUserAddress = this.splitAddress2(this.ctm_order);
         //附件拼接
         this.ctm_order.buyUserPicture = "";
         for (var i = 0; i < this.fileList.length; i++) {
@@ -1478,6 +1426,7 @@ export default {
               this.allSpend <= this.Initial_balance
             ) {
               this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
+              this.$root.$emit("refreshBadgeIcon", "curtainCount");
               this.$alert("提交成功", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
@@ -1544,6 +1493,8 @@ export default {
         for (var i = 0; i < getPush3.length; i++) {
           deleteArray[i] = getPush3[i].id; //不像窗帘，这里一个cart_item_id可能对应多个
         }
+        //地址
+        this.ctm_order.buyUserAddress = this.splitAddress2(this.ctm_order);
         //附件拼接
         this.ctm_order.buyUserPicture = "";
         for (var i = 0; i < this.fileList.length; i++) {
@@ -1572,6 +1523,9 @@ export default {
               this.allSpend <= this.Initial_balance
             ) {
               this.$root.$emit("refreshMoneyEvent"); //触发主页面刷新余额
+              if (this.product_group_tpye == "F")
+                this.$root.$emit("refreshBadgeIcon", "softCount");
+              else this.$root.$emit("refreshBadgeIcon", "wallCount");
               this.$alert("提交成功", "提示", {
                 confirmButtonText: "确定",
                 type: "success"
@@ -1642,6 +1596,11 @@ export default {
         this.ctm_order.buyUserPhone = orderItem.BUYUSERPHONE.trim();
         this.ctm_order.buyUserAddress = orderItem.BUYUSER_ADDRESS.trim();
         this.ctm_order.buyUserPicture = orderItem.BUYUSER_PICTURE.trim();
+        this.ctm_order.buyUserArea1 = orderItem.BUYUSER_AREA1.trim();
+        this.ctm_order.buyUserArea2 = orderItem.BUYUSER_AREA2.trim();
+        this.ctm_order.buyUserArea3 = orderItem.BUYUSER_AREA3.trim();
+        this.ctm_order.buyUserPostAddress = orderItem.BUYUSER_POST_ADDRESS.trim();
+
         if (this.ctm_order.buyUserPicture) {
           var list = this.ctm_order.buyUserPicture.split(";");
           for (var i = 0; i < list.length - 1; i++) {
@@ -1688,6 +1647,160 @@ export default {
         this.$message.error("上传头像图片只能是图片格式!");
       }
       return isJPG;
+    },
+    getBuyUser() {
+      GetBuyUserInfo(
+        {
+          cid: Cookies.get("cid"),
+          condition: this.condition,
+          page: this.currentPage,
+          limit: this.limit
+        },
+        { loaidng: false }
+      ).then(res => {
+        this.buyUserInfoData = res.data;
+      });
+    },
+    searchBuyUser() {
+      this.currentPage = 1;
+      this.getBuyUser();
+    },
+    buyUserShow() {
+      this.condition = "";
+      this.searchBuyUser();
+      this.buyUserVisible = true;
+    },
+    splitAddress(row) {
+      var address = `${row.PROVINCE ? row.PROVINCE : ""}${
+        row.CITY ? row.CITY : ""
+      }${row.COUNTRY ? row.COUNTRY : ""}${
+        row.POST_ADDRESS ? row.POST_ADDRESS : ""
+      }`;
+      return address;
+    },
+    splitAddress2(row) {
+      var address = `${row.buyUserArea1 ? row.buyUserArea1 : ""}${
+        row.buyUserArea2 ? row.buyUserArea2 : ""
+      }${row.buyUserArea3 ? row.buyUserArea3 : ""}${
+        row.buyUserPostAddress ? row.buyUserPostAddress : ""
+      }`;
+      return address;
+    },
+    addBuyUserShow() {
+      this.buyUserModel = {
+        CUSTOMER_CODE: Cookies.get("companyId"),
+        BUYUSER: "",
+        BUYUSER_PHONE: "",
+        POST_ADDRESS: "",
+        PROVINCE: "",
+        CITY: "",
+        COUNTRY: "",
+        PROVINCE_ID: "",
+        CITY_ID: "",
+        COUNTRY_ID: ""
+      };
+      this.country = [];
+      this.city = [];
+      this.addOrNot = true;
+      this.addBuyUserVisible = true;
+    },
+    editBuyUserShow(row) {
+      this.buyUserModel = JSON.parse(JSON.stringify(row));
+      this.country = [];
+      this.city = [];
+      this.addOrNot = false;
+      this.refreshCity(
+        this.buyUserModel.PROVINCE_ID,
+        this.buyUserModel.PROVINCE
+      );
+      if (this.buyUserModel.CITY_ID)
+        this.refreshCountry(
+          this.buyUserModel.CITY_ID,
+          this.buyUserModel.COUNTRY
+        );
+      this.addBuyUserVisible = true;
+    },
+    onSaveTaskClick() {
+      if (
+        !this.buyUserModel.PROVINCE_ID ||
+        !this.buyUserModel.CITY_ID ||
+        !this.buyUserModel.COUNTRY_ID
+      ) {
+        this.$alert("请填写完整地区", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.addOrNot) {
+        InsertBuyUser(this.buyUserModel)
+          .then(res => {
+            this.$message({
+              message: "新增成功!",
+              type: "success",
+              duration: 1000
+            });
+            this.searchBuyUser();
+            this.addBuyUserVisible = false;
+          })
+          .catch(res => {
+            this.$alert("新增失败", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          });
+      } else {
+        UpdateBuyUser(this.buyUserModel)
+          .then(res => {
+            this.$message({
+              message: "编辑成功!",
+              type: "success",
+              duration: 1000
+            });
+            this.searchBuyUser();
+            this.addBuyUserVisible = false;
+          })
+          .catch(res => {
+            this.$alert("编辑失败", "提示", {
+              confirmButtonText: "确定",
+              type: "warning"
+            });
+          });
+      }
+    },
+    deleteBuyUser(row) {
+      this.$confirm("删除的数据无法恢复，是否删除？", "提示", {
+        confirmButtonText: "是",
+        cancelButtonText: "否",
+        type: "warning"
+      })
+        .then(() => {
+          DeleteBuyUser(row).then(res => {
+            this.$message({
+              message: "删除成功!",
+              type: "success",
+              duration: 1000
+            });
+            this.searchBuyUser();
+          });
+        })
+        .catch(res => {
+          this.$alert("删除失败", "提示", {
+            confirmButtonText: "确定",
+            type: "warning"
+          });
+        });
+    },
+    handleRowDBClick(row, column) {
+      this.ctm_order.buyUser = row.BUYUSER;
+      this.ctm_order.buyUserPhone = row.BUYUSER_PHONE;
+      this.ctm_order.buyUserArea1 = row.PROVINCE;
+      this.ctm_order.buyUserArea2 = row.CITY;
+      this.ctm_order.buyUserArea3 = row.COUNTRY;
+      this.ctm_order.buyUserPostAddress = row.POST_ADDRESS;
+      this.refreshCity(row.PROVINCE_ID, row.PROVINCE);
+      this.refreshCountry(row.CITY_ID, row.CITY);
+      this.buyUserVisible = false;
     }
   },
   created: function() {

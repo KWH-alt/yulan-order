@@ -51,20 +51,30 @@
             >{{ ruleForm.WL_CONTACTS }}({{ ruleForm.WL_TEL }})</span
           >
         </span>
+         <span class="zoomLeft">
+          购买人：
+          <span class="zoomRight"
+            >{{ ruleForm.BUYUSER }}({{ ruleForm.BUYUSERPHONE }})</span
+          >
+        </span>
         <br />
         <span class="zoomLeft">
           收货地址：
           <span class="zoomRight">{{ ruleForm.ALL_ADDRESS }}</span>
         </span>
+        <span class="zoomLeft">
+          购买人地址：
+          <span class="zoomRight">{{ ruleForm.BUYUSER_ADDRESS }}</span>
+        </span>
         <span class="zoomLeft" v-if="ruleForm.PACKING_NOTE">
           分包备注：
           <span class="zoomRight">{{ ruleForm.PACKING_NOTE }}</span>
         </span>
+        <br />
         <span class="zoomLeft">
           订单备注：
           <span class="zoomRight">{{ ruleForm.NOTES }}</span>
         </span>
-        <br />
         <span class="zoomLeft">
           玉兰处理说明：
           <span class="zoomRight">{{ ruleForm.YULAN_NOTES }}</span>

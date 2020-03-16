@@ -1463,8 +1463,6 @@ export default {
         return "refundCompensation";
       }
       return index;
-      if (this.getTheTab !== "") return this.getTheTab;
-      return this.defaultUrl;
     },
     activeTabName: {
       get() {
@@ -1475,8 +1473,6 @@ export default {
         this.$router.push({
           path: "/" + this.$store.state.navTabs.activeUrlName
         });
-        this.defaultUrl = "";
-        this.getPath;
       }
     }
   },

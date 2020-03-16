@@ -1,60 +1,23 @@
 <template>
   <div id="shoppingCarCon" class="rel">
-    <el-table
-      id="shopBox"
-      default-expand-all
-      width="100%"
-      style="margin-top:10px;"
-      :row-class-name="tableRowClassName"
-      :row-key="getRowKeys"
-      :expand-row-keys="expands"
-      @expand-change="packUpNot"
-      :data="activityData"
-    >
+    <el-table id="shopBox" default-expand-all width="100%" style="margin-top:10px;" :row-class-name="tableRowClassName"
+      :row-key="getRowKeys" :expand-row-keys="expands" @expand-change="packUpNot" :data="activityData">
       <el-table-column width="100px" type="expand">
         <template slot-scope="scope">
-          <el-table
-            :ref="multipleTable(scope.$index)"
-            :data="table(scope.$index)"
-            tooltip-effect="dark"
-            style="width:100%;"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column
-              type="selection"
-              width="55"
-              :selectable="checkActiviyEffect"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="item.itemNo"
-              label="型号"
-              min-width="100"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              label="活动"
-              min-width="140px"
-              show-overflow-tooltip
-              align="center"
-            >
+          <el-table :ref="multipleTable(scope.$index)" :data="table(scope.$index)" tooltip-effect="dark"
+            style="width:100%;" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" :selectable="checkActiviyEffect" align="center">
+            </el-table-column>
+            <el-table-column prop="item.itemNo" label="型号" min-width="100" align="center"></el-table-column>
+            <el-table-column label="活动" min-width="140px" show-overflow-tooltip align="center">
               <template slot-scope="scope">
-                <span
-                  style="color: red;"
-                  v-if="scope.row.activityEffective === false"
-                  >(过期活动)</span
-                >
+                <span style="color: red;" v-if="scope.row.activityEffective === false">(过期活动)</span>
                 {{
                   scope.row.activityName ? scope.row.activityName : "不参与活动"
                 }}
               </template>
             </el-table-column>
-            <el-table-column
-              label="发货说明"
-              min-width="80"
-              show-overflow-tooltip
-              align="center"
-            >
+            <el-table-column label="发货说明" min-width="80" show-overflow-tooltip align="center">
               <template slot-scope="scope">
                 <span v-if="scope.row.splitShipment === 0">等生产</span>
                 <span v-else-if="scope.row.splitShipment === 1">分批发货</span>
@@ -74,31 +37,19 @@
                     {{ scope1.row.width }} × {{ scope1.row.height }} =
                     {{ scope1.row.width.mul(scope1.row.height) | dosageFilter }}
                   </span>
-                  <span
-                    style="color: red;"
-                    v-if="
+                  <span style="color: red;" v-if="
                       scope1.row.width.mul(scope1.row.height) <
                         scope1.row.item.minimumPurchase
-                    "
-                    >(最小起购数量{{ scope1.row.item.minimumPurchase }})</span
-                  >
+                    ">(最小起购数量{{ scope1.row.item.minimumPurchase }})</span>
                 </div>
                 <div v-else>
                   <span>{{ scope1.row.quantity }}</span>
-                  <span
-                    style="color: red;"
-                    v-if="scope1.row.quantity < scope1.row.item.minimumPurchase"
-                    >(最小起购数量{{ scope1.row.item.minimumPurchase }})</span
-                  >
+                  <span style="color: red;" v-if="scope1.row.quantity 
+                    < scope1.row.item.minimumPurchase">(最小起购数量{{ scope1.row.item.minimumPurchase }})</span>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              min-width="100"
-              label="单位"
-              prop="unit"
-              align="center"
-            >
+            <el-table-column min-width="100" label="单位" prop="unit" align="center">
             </el-table-column>
             <el-table-column label="小计" align="center">
               <template slot-scope="scope">
@@ -122,28 +73,20 @@
                 <div v-if="isManager === '0'">***</div>
                 <div v-else-if="scope.row.unit === '平方米'">
                   {{
-                    scope.row.salPromotion
-                      ? scope.row.salPromotion.discount *
-                        subtotal(
-                          scope.row.width,
-                          scope.row.height,
-                          scope.row.price
-                        )
-                      : subtotal(
-                          scope.row.width,
-                          scope.row.height,
-                          scope.row.price
-                        )
+                    scope.row.salPromotion? 
+                    (scope.row.salPromotion.type == 1? 
+                    scope.row.salPromotion.discount * subtotal( scope.row.width,scope.row.height,scope.row.price)
+                    :subtotal(scope.row.width,scope.row.height,scope.row.salPromotion.price))
+                    : subtotal(scope.row.width,scope.row.height,scope.row.price)
                   }}
                 </div>
                 <div v-else>
                   {{
-                    scope.row.salPromotion
-                      ? scope.row.salPromotion.discount *
-                        (parseFloat(scope.row.price) *
-                          parseFloat(scope.row.quantity))
-                      : (parseFloat(scope.row.price) *
-                          parseFloat(scope.row.quantity))
+                    scope.row.salPromotion? 
+                    (scope.row.salPromotion.type == 1? 
+                    scope.row.salPromotion.discount * parseFloat(scope.row.price) * parseFloat(scope.row.quantity)
+                    :parseFloat(scope.row.salPromotion.price) *parseFloat(scope.row.quantity))
+                    : parseFloat(scope.row.price) * parseFloat(scope.row.quantity)
                         | dosageFilter
                   }}
                 </div>
@@ -151,14 +94,8 @@
             </el-table-column>
             <el-table-column label="操作" min-width="170" align="center">
               <template slot-scope="scope">
-                <a
-                  class="link-detail"
-                  @click="handleDetails(scope.$index, scope.row)"
-                  >查看详情</a
-                >
-                <a class="link-delete" @click="deleteSingle(scope.row)"
-                  >删除商品</a
-                >
+                <a class="link-detail" @click="handleDetails(scope.$index, scope.row)">查看详情</a>
+                <a class="link-delete" @click="deleteSingle(scope.row)">删除商品</a>
               </template>
             </el-table-column>
           </el-table>
@@ -168,24 +105,14 @@
         <template slot-scope="scope">
           <div v-if="scope.row.activity">
             {{ scope.row.activity }}
-            <a
-              class="ml20"
-              style="color:#606266"
-              @click="deleteGroup(scope.$index)"
-              >删除分组</a
-            >
+            <a class="ml20" style="color:#606266" @click="deleteGroup(scope.$index)">删除分组</a>
           </div>
         </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
           <div class="r">
-            <a
-              class="ml20"
-              @click="deleteChoose(scope.$index)"
-              style="color: red;"
-              >删除选中的商品</a
-            >
+            <a class="ml20" @click="deleteChoose(scope.$index)" style="color: red;">删除选中的商品</a>
           </div>
         </template>
       </el-table-column>
@@ -199,23 +126,12 @@
         </div>
         <div>
           <span>合计：</span>
-          <span
-            v-if="isManager === '0'"
-            style="color:red; font-size:20px;"
-            class="mr10"
-            >***</span
-          >
-          <span v-else style="color:red; font-size:20px;" class="mr10"
-            >￥{{ totalPriceMoney | dosageFilter }}</span
-          >
+          <span v-if="isManager === '0'" style="color:red; font-size:20px;" class="mr10">***</span>
+          <span v-else style="color:red; font-size:20px;" class="mr10">￥{{ totalPriceMoney | dosageFilter }}</span>
         </div>
-        <div
-          @click="handleCommit"
-          v-bind:style="commitBtn"
-          style="width:80px; height:50px;
+        <div @click="handleCommit" v-bind:style="commitBtn" style="width:80px; height:50px;
                         color:white; font-size:18px; 
-                        text-align:center; cursor: pointer;"
-        >
+                        text-align:center; cursor: pointer;">
           去结算
         </div>
       </div>
@@ -531,13 +447,21 @@ export default {
           let sub = parseFloat(_data.price * _data.quantity);
           total += sub;
           totalPrice += _data.salPromotion
-            ? _data.salPromotion.discount * sub
+            ? _data.salPromotion.type == 1
+              ? _data.salPromotion.discount * sub
+              : parseFloat(_data.salPromotion.price * _data.quantity)
             : sub;
         } else {
           let sub = this.subtotal(_data.width, _data.height, _data.price);
           total += sub;
           totalPrice += _data.salPromotion
-            ? _data.salPromotion.discount * sub
+            ? _data.salPromotion.type == 1
+              ? _data.salPromotion.discount * sub
+              : this.subtotal(
+                  _data.width,
+                  _data.height,
+                  _data.salPromotion.price
+                )
             : sub;
         }
       }
