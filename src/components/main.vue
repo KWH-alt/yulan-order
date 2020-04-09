@@ -1239,7 +1239,7 @@ export default {
                   "<div style='border-bottom:0.2rem solid #ccc;'></div><br />";
               this.notificationVisible = true;
               if (this.newsTextArr[i].POPUPTYPE == "FIRSTOFDAY")
-                InserFlag({ nid: this.newsTextArr[i].ID, cid: this.cid }); //标记为已显示
+                InserFlag({ nid: this.newsTextArr[i].ID, cid: this.cid,accept:1 }); //标记为已显示
             }
           }
         }
