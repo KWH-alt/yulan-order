@@ -51,20 +51,30 @@
             >{{ ruleForm.WL_CONTACTS }}({{ ruleForm.WL_TEL }})</span
           >
         </span>
+         <span class="zoomLeft">
+          购买人：
+          <span class="zoomRight"
+            >{{ ruleForm.BUYUSER }}({{ ruleForm.BUYUSERPHONE }})</span
+          >
+        </span>
         <br />
         <span class="zoomLeft">
           收货地址：
           <span class="zoomRight">{{ ruleForm.ALL_ADDRESS }}</span>
         </span>
+        <span class="zoomLeft">
+          购买人地址：
+          <span class="zoomRight">{{ ruleForm.BUYUSER_ADDRESS }}</span>
+        </span>
         <span class="zoomLeft" v-if="ruleForm.PACKING_NOTE">
           分包备注：
           <span class="zoomRight">{{ ruleForm.PACKING_NOTE }}</span>
         </span>
+        <br />
         <span class="zoomLeft">
           订单备注：
           <span class="zoomRight">{{ ruleForm.NOTES }}</span>
         </span>
-        <br />
         <span class="zoomLeft">
           玉兰处理说明：
           <span class="zoomRight">{{ ruleForm.YULAN_NOTES }}</span>
@@ -327,7 +337,7 @@ import { mapMutations, mapActions } from "vuex";
 import { mapState } from "vuex";
 import Cookies from "js-cookie";
 import DetailCurtainTable from "../detail/detailCurtainTable";
-import { async } from 'q';
+import { async } from "q";
 export default {
   name: "examineDatail",
   props: ["isShowButton"],
@@ -663,21 +673,21 @@ export default {
         order_no: Cookies.get("ORDER_NO")
       };
       orderDetail(url, data).then(res => {
-        GetCtmOrder({orderNo: Cookies.get("ORDER_NO")}).then(res2=>{
-        this.ruleForm = res.data.data[0];
-        this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE;//先这样处理，后台换了后台就不需要了
-        this.ruleForm.BUYUSER_ADDRESS = res2.data.BUYUSER_ADDRESS;
-        this.ruleForm.BUYUSER_PICTURE = res2.data.BUYUSER_PICTURE;
-        for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
-          this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
-        }
-        var recordData = {
-          orderNo: this.orderNum
-        };
-        getOperationRecord(recordData).then(res => {
-          this.operationRecords = res.data;
+        GetCtmOrder({ orderNo: Cookies.get("ORDER_NO") }).then(res2 => {
+          this.ruleForm = res.data.data[0];
+          this.ruleForm.PACKING_NOTE = res2.data.PACKING_NOTE; //先这样处理，后台换了后台就不需要了
+          this.ruleForm.BUYUSER_ADDRESS = res2.data.BUYUSER_ADDRESS;
+          this.ruleForm.BUYUSER_PICTURE = res2.data.BUYUSER_PICTURE;
+          for (let i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
+            this.ruleForm.ORDERBODY[i].checkStatus = "未修改";
+          }
+          var recordData = {
+            orderNo: this.orderNum
+          };
+          getOperationRecord(recordData).then(res => {
+            this.operationRecords = res.data;
+          });
         });
-        })
       });
     },
     //返回指定
@@ -722,7 +732,10 @@ export default {
           if (this.ruleForm.STATUS_ID == 5 || this.ruleForm.STATUS_ID == 6) {
             //欠款可提交判断活动和优惠券是否过期
             for (var i = 0; i < this.ruleForm.ORDERBODY.length; i++) {
-              if (this.ruleForm.ORDERBODY[i].PROMOTION_TYPE && this.ruleForm.ORDERBODY[i].PROMOTION_TYPE!=' ') {
+              if (
+                this.ruleForm.ORDERBODY[i].PROMOTION_TYPE &&
+                this.ruleForm.ORDERBODY[i].PROMOTION_TYPE != " "
+              ) {
                 var res = await GetPromotionByType({
                   proType: this.ruleForm.ORDERBODY[i].PROMOTION_TYPE,
                   cid: Cookies.get("cid")
@@ -738,9 +751,11 @@ export default {
                   );
                   return;
                 }
-                if (new Date(res.data.DATE_END) < new Date() || res.data.USE_ID == "0") {
+                var dateEnd = new Date(res.data.DATE_END);
+                dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
+                if (new Date(dateEnd) < new Date() || res.data.USE_ID == "0") {
                   this.$alert(
-                    `活动‘&${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
+                    `活动‘${this.ruleForm.ORDERBODY[i].PROMOTION}’已过期，请删除订单后重新下单`,
                     "提示",
                     {
                       confirmButtonText: "确定",
@@ -809,7 +824,7 @@ export default {
         if (index == 0) {
           sums[index] = "总计";
           return;
-        } else if (index == 5 || index == 6 || index == 7 || index == 8) {
+        } else if (index == 6 || index == 7 || index == 8 || index == 9) {
           var values = data.map(item => Number(item[column.property]));
           var cancelIndex = data.map(item => Number(item["STATUS_ID"])); //取得状态判断是否是作废的
           if (!values.every(value => isNaN(value))) {

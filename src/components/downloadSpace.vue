@@ -1,119 +1,53 @@
 <template>
   <div>
-    <div style="height:40px;" class="buttonClass">
-      <el-button
-        v-show="false"
-        :disabled="multipleSelection.length == 0"
-        icon="el-icon-download"
-        type="primary"
-        plain
-        >下载</el-button
-      >
-      <el-input
-        @keyup.enter.native="search()"
-        placeholder="搜索文件"
-        v-model="find"
-        style="width:350px;float:right;margin-right:50px;"
-      >
-        <el-button @click="search()" slot="append" icon="el-icon-search"
-          >搜索</el-button
-        >
+    <span style="float:right;margin-bottom:10px;">
+      <el-button v-show="false" :disabled="multipleSelection.length == 0" icon="el-icon-download" type="primary" plain>
+        下载</el-button>
+      <el-input @keyup.enter.native="search()" placeholder="搜索文件" v-model="find"
+        style="width:350px;float:right;margin-right:50px;">
+        <el-button @click="search()" slot="append" icon="el-icon-search">搜索</el-button>
       </el-input>
-    </div>
-    <div style="margin:5px;">
-      <a
-        style="font-size:14px;"
-        v-if="navigationList.length > 1"
-        class="islink"
-        @click="gotoUp()"
-        >返回上一级</a
-      >
+    </span>
+    <div style="margin:20px 0 0 10px;display:inline-block;">
+      <a style="font-size:14px;" v-if="navigationList.length > 1" class="islink" @click="gotoUp()">返回上一级</a>
       <span v-if="navigationList.length > 1">|</span>
-      <i
-        title="刷新"
-        :class="refreshClass"
-        style="color:black;cursor:pointer;"
-        @click="refresh"
-      ></i>
-      <a
-        style="font-size:14px;"
-        v-for="(item, index) in navigationList"
-        :key="index"
+      <i title="刷新" :class="refreshClass" style="color:black;cursor:pointer;" @click="refresh"></i>
+      <a style="font-size:14px;" v-for="(item, index) in navigationList" :key="index"
         :class="[index == navigationList.length - 1 ? 'nolink' : 'islink']"
-        @click="gotoIndex(item, index)"
-        >&nbsp;{{ item.FILE_NAME }}>&nbsp;</a
-      >
+        @click="gotoIndex(item, index)">&nbsp;{{ item.FILE_NAME }}>&nbsp;</a>
     </div>
-    <el-table
-      :data="fileData"
-      @selection-change="handleSelectionChange"
-      @row-dblclick="handleDbclikc"
-    >
+    <el-table :data="fileData" @selection-change="handleSelectionChange" @row-dblclick="handleDbclikc">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column label="文件名" header-align="center">
         <template slot-scope="scope">
           <span>
             <div class="format" :class="formatClass(scope.row.FILE_NAME)"></div>
             <div style="display:inline-block;">
-              <a
-                :class="[scope.row.FILE_TYPE == 0 ? 'nolink' : 'link']"
-                style="margin-left:5px;"
-                @click="gotoNext(scope.row)"
-                >{{ scope.row.FILE_NAME }}</a
-              >
+              <a :class="[scope.row.FILE_TYPE == 0 ? 'nolink' : 'link']" style="margin-left:5px;"
+                @click="gotoNext(scope.row)">{{ scope.row.FILE_NAME }}</a>
             </div>
           </span>
         </template>
       </el-table-column>
       <el-table-column width="150">
         <template slot-scope="scope">
-          <el-button
-            @click="downLoad(scope.row)"
-            type="primary"
-            size="mini"
-            icon="el-icon-download"
-            circle
-          ></el-button>
-          <el-button
-            v-if="isImage(scope.row)"
-            @click="previewPic(scope.row.FILE_PATH)"
-            size="mini"
-            icon="el-icon-search"
-            circle
-          ></el-button>
+          <el-button @click="downLoad(scope.row)" type="primary" size="mini" icon="el-icon-download" circle></el-button>
+          <el-button v-if="isImage(scope.row)" @click="previewPic(scope.row.FILE_PATH)" size="mini"
+            icon="el-icon-search" circle></el-button>
         </template>
       </el-table-column>
-      <el-table-column label="文件大小" width="150" align="center"
-        ><template slot-scope="scope">
+      <el-table-column label="文件大小" width="150" align="center"><template slot-scope="scope">
           <span v-if="scope.row.FILE_TYPE == 1">-</span>
           <span v-else>{{ scope.row.FILE_SIZE | fileSizeFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="上传时间"
-        prop="UPLOAD_TIME"
-        width="200"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        v-if="dirShow"
-        label="所在目录"
-        width="200"
-        align="center"
-        ><template slot-scope="scope">
-          <a
-            style="text-decoration: underline;cursor:pointer;"
-            @click="gotoTarget(scope.row.FILE_PID)"
-            >{{ filterDir(scope.row.FILE_PID) }}</a
-          >
-        </template></el-table-column
-      >
+      <el-table-column label="上传时间" prop="UPLOAD_TIME" width="200" align="center"></el-table-column>
+      <el-table-column v-if="dirShow" label="所在目录" width="200" align="center"><template slot-scope="scope">
+          <a style="text-decoration: underline;cursor:pointer;"
+            @click="gotoTarget(scope.row.FILE_PID)">{{ filterDir(scope.row.FILE_PID) }}</a>
+        </template></el-table-column>
     </el-table>
-    <el-dialog
-      title="图片预览(因图片过大，若显示上一张图片请耐心等待刷新)"
-      :visible.sync="picShow"
-      top="5vh"
-    >
+    <el-dialog title="图片预览(因图片过大，若显示上一张图片请耐心等待刷新)" :visible.sync="picShow" top="5vh">
       <img width="100%" :src="imgUrl" />
     </el-dialog>
   </div>

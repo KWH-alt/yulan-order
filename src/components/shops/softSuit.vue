@@ -194,7 +194,7 @@ export default {
         },
         {
           name: "GH",
-          label: "挂画"
+          label: "装饰画"
         },
         {
           name: "TC",

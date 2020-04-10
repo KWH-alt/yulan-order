@@ -2,68 +2,21 @@
   <div class="centerCard">
     <el-card shadow="hover">
       <div id="tbar" class="tbarStyle">
-        <el-date-picker
-          type="date"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          placeholder="查询开始日期"
-          v-model="beginTime"
-          style="width:12%;"
-        ></el-date-picker>
+        <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="查询开始日期"
+          v-model="beginTime" style="width:12%;"></el-date-picker>
         --
-        <el-date-picker
-          type="date"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          placeholder="查询截止日期"
-          v-model="finishTime"
-          style="width:12%;"
-        ></el-date-picker>
-        <el-select
-          v-model="status"
-          style="margin-left: 10px;width:12%;"
-          placeholder="全部状态"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.label"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
+        <el-date-picker type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="查询截止日期"
+          v-model="finishTime" style="width:12%;"></el-date-picker>
+        <el-select v-model="status" style="margin-left: 10px;width:12%;" placeholder="全部状态">
+          <el-option v-for="item in options" :key="item.label" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-button
-          size="medium"
-          type="success"
-          style="margin-left: 10px"
-          @click="search()"
-          >查询</el-button
-        >
-        <el-button
-          style="float:right;margin-right:20px;"
-          size="medium"
-          @click="newOne()"
-          type="primary"
-          >新增申请单</el-button
-        >
+        <el-button size="medium" type="success" style="margin-left: 10px" @click="search()">查询</el-button>
+        <el-button style="float:right;margin-right:20px;" size="medium" @click="newOne()" type="primary">新增申请单
+        </el-button>
       </div>
-      <el-table
-        border
-        :data="imageStoreData"
-        style="width: 100%"
-        :row-class-name="tableRowClassName"
-      >
-        <el-table-column
-          width="130"
-          prop="ID"
-          label="申请单号"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="CREATER"
-          label="申请人"
-          align="center"
-          width="80"
-        ></el-table-column>
+      <el-table border :data="imageStoreData" style="width: 100%" :row-class-name="tableRowClassName">
+        <el-table-column width="130" prop="ID" label="申请单号" align="center"></el-table-column>
+        <el-table-column prop="CREATER" label="申请人" align="center" width="80"></el-table-column>
         <el-table-column width="100" label="申请时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.DATE_CRE | datatrans }}</span>
@@ -72,20 +25,9 @@
         <el-table-column width="80" label="店面形式" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.STORE_FORM | formTrans }}</span>
-          </template></el-table-column
-        >
-        <el-table-column
-          prop="STORE_AREA"
-          label="店面面积(m2)"
-          align="center"
-          width="70"
-        ></el-table-column>
-        <el-table-column
-          prop="STORE_PLIE"
-          label="层数"
-          align="center"
-          width="60"
-        ></el-table-column>
+          </template></el-table-column>
+        <el-table-column prop="STORE_AREA" label="店面面积(m2)" align="center" width="70"></el-table-column>
+        <el-table-column prop="STORE_PLIE" label="层数" align="center" width="60"></el-table-column>
         <el-table-column width="110" label="计划动工时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.PLAN_DATE | datatrans }}</span>
@@ -109,90 +51,45 @@
         </el-table-column>
         <el-table-column label="付款凭证" align="center" width="130">
           <template slot-scope="scope">
-            <el-link
-              type="primary"
-              size="mini"
-              @click="showImage(scope.row.PAYMENT)"
-              >{{ scope.row.PAYMENT }}</el-link
-            >
+            <el-link type="primary" size="mini" @click="showImage(scope.row.PAYMENT)">{{ scope.row.PAYMENT }}</el-link>
           </template>
         </el-table-column>
         <el-table-column width="60" label="附件" align="center">
           <template slot-scope="scope">
-            <a
-              v-if="scope.row.ATTACHMENT_FILE != ''"
-              title="点击下载压缩包"
-              class="attachLink"
-              @click="downLoadCompress(scope.row.ATTACHMENT_FILE_FOLDER)"
-              >{{ scope.row.ATTACHMENT_FILE.split(";").length - 1 }}个</a
-            >
+            <a v-if="scope.row.ATTACHMENT_FILE != ''" title="点击下载压缩包" class="attachLink"
+              @click="downLoadCompress(scope.row.ATTACHMENT_FILE_FOLDER)">{{ scope.row.ATTACHMENT_FILE.split(";").length - 1 }}个</a>
             <span v-else>0个</span>
           </template>
         </el-table-column>
         <el-table-column width="60" label="设计结果" align="center">
           <template slot-scope="scope">
-            <a
-              v-if="scope.row.GM_FILE != ''"
-              title="点击下载压缩包"
-              class="attachLink"
-              @click="downLoadCompress(scope.row.GM_FILE_FOLDER)"
-              >{{ scope.row.GM_FILE.split(";").length - 1 }}个</a
-            >
+            <a v-if="scope.row.GM_FILE != ''" title="点击下载压缩包" class="attachLink"
+              @click="downLoadCompress(scope.row.GM_FILE_FOLDER)">{{ scope.row.GM_FILE.split(";").length - 1 }}个</a>
             <span v-else>暂无</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button
-              v-if="
+            <el-button v-if="
                 scope.row.STATUS == 1 ||
                   scope.row.STATUS == 2 ||
                   scope.row.STATUS == 3
-              "
-              @click="checkDetail(scope.row)"
-              type="success"
-              icon="el-icon-search"
-              size="mini"
-              circle
-            ></el-button>
-            <el-button
-              v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5"
-              @click="editIt(scope.row)"
-              type="primary"
-              icon="el-icon-edit"
-              size="mini"
-              circle
-            ></el-button>
-            <el-button
-              v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5"
-              @click="deleteDetail(scope.row)"
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              circle
-            ></el-button>
+              " @click="checkDetail(scope.row)" type="success" icon="el-icon-search" size="mini" circle></el-button>
+            <el-button v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5" @click="editIt(scope.row)" type="primary"
+              icon="el-icon-edit" size="mini" circle></el-button>
+            <el-button v-if="scope.row.STATUS == 4 || scope.row.STATUS == 5" @click="deleteDetail(scope.row)"
+              type="danger" icon="el-icon-delete" size="mini" circle></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div style="margin:0 25%;" class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-sizes="[5, 10, 15, 20]"
-          :page-size="limit"
-          layout="total,sizes,prev, pager, next, jumper"
-          :total="count"
-        ></el-pagination>
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page.sync="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="limit"
+          layout="total,sizes,prev, pager, next, jumper" :total="count"></el-pagination>
       </div>
     </el-card>
 
-    <el-dialog
-      :visible.sync="imageStoreDetail"
-      :close-on-click-modal="false"
-      width="58%"
-      top="5vh"
-    >
+    <el-dialog :visible.sync="imageStoreDetail" :close-on-click-modal="false" width="58%" top="5vh">
       <!-- 编辑区 -->
       <div class="table-c">
         <h2 style="text-align:center;margin:0 0 10px 0;">
@@ -201,26 +98,20 @@
         <h3 v-if="EDITorCHECK || newORedit">
           提交时间：{{ tableData.DATE_CRE | datatrans }}
         </h3>
-        <h3
-          v-if="
+        <h3 v-if="
             (EDITorCHECK || newORedit) &&
               (tableData.STATUS == 2 ||
                 tableData.STATUS == 3 ||
                 tableData.STATUS == 5)
-          "
-        >
+          ">
           市场部确认时间：{{
             tableData.DATE_ENTER | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.ENTER_SUG"
-            >审核意见：{{ tableData.ENTER_SUG }}</span
-          >
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.ENTER_SUG">审核意见：{{ tableData.ENTER_SUG }}</span>
         </h3>
         <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 3">
           广美确认时间：{{
             tableData.DATE_PASS | datatrans
-          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.PASS_SUG"
-            >审核意见：{{ tableData.PASS_SUG }}</span
-          >
+          }}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="tableData.PASS_SUG">审核意见：{{ tableData.PASS_SUG }}</span>
         </h3>
         <h3 v-if="(EDITorCHECK || newORedit) && tableData.STATUS == 4">
           市场部退回时间：{{
@@ -245,14 +136,8 @@
 
             <td class="grayTD" colspan="1" style="height:28px;">年销售任务</td>
             <td style="height:28px;">
-              <el-input
-                :disabled="EDITorCHECK"
-                placeholder="（客户填写）"
-                clearable
-                class="inputStyle"
-                size="mini"
-                v-model="tableData.SALE_TARGET"
-              ></el-input>
+              <el-input :disabled="EDITorCHECK" placeholder="（客户填写）" clearable class="inputStyle" size="mini"
+                v-model="tableData.SALE_TARGET"></el-input>
             </td>
           </tr>
 
@@ -261,14 +146,8 @@
               店面地址<span style="color:red;">*</span>
             </td>
             <td colspan="3" style="height:28px;">
-              <el-input
-                :disabled="EDITorCHECK"
-                placeholder="（客户必填）"
-                clearable
-                class="inputStyle"
-                size="mini"
-                v-model="tableData.STORE_ADDRESS"
-              ></el-input>
+              <el-input :disabled="EDITorCHECK" placeholder="（客户必填）" clearable class="inputStyle" size="mini"
+                v-model="tableData.STORE_ADDRESS"></el-input>
             </td>
           </tr>
 
@@ -289,24 +168,14 @@
           </tr>
 
           <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="2"
-              border="0px"
-              style="height:28px;"
-            >
+            <td class="grayTD" colspan="1" rowspan="2" border="0px" style="height:28px;">
               店面信息
             </td>
             <td class="grayTD" colspan="1" style="height:28px;">
               店面形式<span style="color:red;">*</span>
             </td>
             <td colspan="3" style="text-align:left;height:28px;">
-              <el-radio-group
-                :disabled="EDITorCHECK"
-                style="margin-left:50px;"
-                v-model="tableData.STORE_FORM"
-              >
+              <el-radio-group :disabled="EDITorCHECK" style="margin-left:50px;" v-model="tableData.STORE_FORM">
                 <el-radio label="street">街边店</el-radio>
                 <el-radio label="market">商城店</el-radio>
               </el-radio-group>
@@ -318,20 +187,13 @@
               店面面积<span style="color:red;">*</span>
             </td>
             <td colspan="1" style="height:28px;">
-              <el-input
-                :disabled="EDITorCHECK"
-                style="width:65%"
-                placeholder="（客户必填）"
-                clearable
-                class="inputStyle"
-                size="mini"
-                oninput="value=value.replace(/[^\d.]/g,'')
+              <el-input :disabled="EDITorCHECK" style="width:65%" placeholder="（客户必填）" clearable class="inputStyle"
+                size="mini" oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
-                v-model="tableData.STORE_AREA"
-              ></el-input>
+                v-model="tableData.STORE_AREA"></el-input>
               <span>平方米</span>
             </td>
 
@@ -339,45 +201,26 @@
               层数<span style="color:red;">*</span>
             </td>
             <td colspan="1" style="height:28px;">
-              <el-input
-                :disabled="EDITorCHECK"
-                placeholder="（客户必填）"
-                clearable
-                class="inputStyle"
-                size="mini"
-                oninput="value=value.replace(/[^\d.]/g,'')
+              <el-input :disabled="EDITorCHECK" placeholder="（客户必填）" clearable class="inputStyle" size="mini" oninput="value=value.replace(/[^\d.]/g,'')
                                 .replace(/^\./g, '').replace(/\.{2,}/g, '.')
                                 .replace('.', '$#$').replace(/\./g, '')
                                 .replace('$#$', '.')
                                 .slice(0,value.indexOf('.') === -1? value.length: value.indexOf('.') + 3)"
-                v-model="tableData.STORE_PLIE"
-              ></el-input>
+                v-model="tableData.STORE_PLIE"></el-input>
             </td>
           </tr>
 
           <tr>
-            <td
-              class="grayTD"
-              colspan="1"
-              rowspan="5"
-              border="0px"
-              style="height:28px;"
-            >
+            <td class="grayTD" colspan="1" rowspan="5" border="0px" style="height:28px;">
               设计需求
             </td>
             <td class="grayTD" colspan="1" style="height:28px;">
               计划动工时间<span style="color:red;">*</span>
             </td>
             <td colspan="3" rowspan="1" style="text-align:left;height:28px;">
-              <el-date-picker
-                :disabled="EDITorCHECK"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                placeholder="选择计划动工时间"
-                v-model="tableData.PLAN_DATE"
-                style="width:35%;margin-left:10px;"
-              ></el-date-picker>
+              <el-date-picker :disabled="EDITorCHECK" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                placeholder="选择计划动工时间" v-model="tableData.PLAN_DATE" style="width:35%;margin-left:10px;">
+              </el-date-picker>
             </td>
           </tr>
 
@@ -386,15 +229,9 @@
               实施形式<span style="color:red;">*</span>
             </td>
             <td colspan="3" style="text-align:left;height:45px;">
-              <el-radio-group
-                :disabled="EDITorCHECK"
-                style="margin-left:10px;"
-                v-model="tableData.IMPLEMENTTATION_FORM"
-                @change="implentmentChange"
-              >
-                <el-radio style="margin-bottom:5px;" :label="1"
-                  >①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持</el-radio
-                >
+              <el-radio-group :disabled="EDITorCHECK" style="margin-left:10px;" v-model="tableData.IMPLEMENTTATION_FORM"
+                @change="implentmentChange">
+                <el-radio style="margin-bottom:5px;" :label="1">①100%按公司设计方案落地，软装物料由公司配置，享受公司建店支持</el-radio>
                 <br />
                 <el-radio :label="2">②自行落地</el-radio>
               </el-radio-group>
@@ -406,10 +243,8 @@
               是否需要上门测量
             </td>
             <td colspan="1" style="height:35px">
-              <el-radio-group
-                :disabled="tableData.IMPLEMENTTATION_FORM != 1 || EDITorCHECK"
-                v-model="tableData.MEASURE"
-              >
+              <el-radio-group :disabled="tableData.IMPLEMENTTATION_FORM != 1 || EDITorCHECK"
+                v-model="tableData.MEASURE">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
@@ -423,14 +258,8 @@
           <tr>
             <td class="grayTD" colspan="1" style="height:50px">其他需求说明</td>
             <td colspan="3" style="height:50px">
-              <el-input
-                :disabled="EDITorCHECK"
-                class="inputStyle"
-                type="textarea"
-                :autosize="{ minRows: 2, maxRow: 4 }"
-                resize="none"
-                v-model="tableData.NOTE"
-              ></el-input>
+              <el-input :disabled="EDITorCHECK" class="inputStyle" type="textarea" :autosize="{ minRows: 2, maxRow: 4 }"
+                resize="none" v-model="tableData.NOTE"></el-input>
             </td>
           </tr>
 
@@ -440,26 +269,11 @@
             </td>
 
             <td colspan="2" style="height:14px;">
-              <el-upload
-                v-if="!EDITorCHECK"
-                class="upload-de"
-                :action="Global.baseUrl + '/IMAGE_STORE/UploadFiles'"
-                style="margin-top:10px;"
-                drag
-                multiple
-                :on-change="handleChange"
-                :on-remove="handleRemove"
-                :on-success="handleSuccess"
-                :on-error="handleError"
-                ref="upload"
-                :auto-upload="false"
-                :file-list="fileList"
-                :data="{ cid: cid, dateStamp: dateStamp }"
-              >
-                <i
-                  class="el-icon-upload"
-                  style="width:300px;height:30px;margin-top:10px;"
-                ></i>
+              <el-upload v-if="!EDITorCHECK" class="upload-de" :action="Global.baseUrl + '/IMAGE_STORE/UploadFiles'"
+                style="margin-top:10px;" drag multiple :on-change="handleChange" :on-remove="handleRemove"
+                :on-success="handleSuccess" :on-error="handleError" ref="upload" :auto-upload="false"
+                :file-list="fileList" :data="{ cid: cid, dateStamp: dateStamp }">
+                <i class="el-icon-upload" style="width:300px;height:30px;margin-top:10px;"></i>
                 <div class="el-upload__text">
                   将文件拖到此处，或<em>点击上传</em>
                 </div>
@@ -468,21 +282,13 @@
                 </div>
               </el-upload>
               <ul v-else class="el-upload-list el-upload-list--text">
-                <li
-                  v-for="(fileList, index) in fileList"
-                  :key="index"
-                  class="el-upload-list__item is-success"
-                  tabindex="0"
-                >
+                <li v-for="(fileList, index) in fileList" :key="index" class="el-upload-list__item is-success"
+                  tabindex="0">
                   <a class="el-upload-list__item-name">
                     <i class="el-icon-document"> </i>{{ fileList.name }}
                   </a>
-                  <label
-                    style="display:block;position:absolute;top:1px;right:20px;"
-                  >
-                    <a style="cursor:pointer;" @click="downLoad(fileList.url)"
-                      >下载附件</a
-                    >
+                  <label style="display:block;position:absolute;top:1px;right:20px;">
+                    <a style="cursor:pointer;" @click="downLoad(fileList.url)">下载附件</a>
                   </label>
                 </li>
               </ul>
@@ -501,19 +307,9 @@
               付款凭证<span style="color:red;">*</span>
             </td>
             <td colspan="3" style="text-align:left;height:28px;">
-              <el-select
-                v-if="!EDITorCHECK"
-                style="width:500px;"
-                v-model="tableData.PAYMENT"
-                filterable
-                placeholder="请选择汇款凭证"
-              >
-                <el-option
-                  v-for="item in bankData"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-if="!EDITorCHECK" style="width:500px;" v-model="tableData.PAYMENT" filterable
+                placeholder="请选择汇款凭证">
+                <el-option v-for="item in bankData" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
               <span v-else style="margin-left:20px;">{{
@@ -527,21 +323,14 @@
               <span style="margin-left:10px;">责任人签字：</span>
             </td>
             <td colspan="2" style="text-align:left;height:28px;">
-              <span v-if="!EDITorCHECK && !newORedit" style="margin-left:10px;"
-                >日期：{{ new Date().getTime() | datatrans }}</span
-              >
-              <span v-else style="margin-left:10px;"
-                >日期：{{ tableData.DATE_CRE | datatrans }}</span
-              >
+              <span v-if="!EDITorCHECK && !newORedit"
+                style="margin-left:10px;">日期：{{ new Date().getTime() | datatrans }}</span>
+              <span v-else style="margin-left:10px;">日期：{{ tableData.DATE_CRE | datatrans }}</span>
             </td>
           </tr>
 
           <tr style="height:60px">
-            <td
-              colspan="5"
-              border="0px"
-              style="font-size:13px;color:gray;text-align:left;"
-            >
+            <td colspan="5" border="0px" style="font-size:13px;color:gray;text-align:left;">
               <div style="margin:0 5px;">
                 1.请提前15个工作日提交设计需求申请。<br />
                 2.请附上店面平面图（清晰标注尺寸以及消防位等障碍位置）。<br />
@@ -557,40 +346,20 @@
         <div v-if="fileListGM.length > 0" style="width:60%">
           <span>设计结果：</span>
           <ul width="50%" class="el-upload-list el-upload-list--text">
-            <li
-              v-for="(fileList, index) in fileListGM"
-              :key="index"
-              class="el-upload-list__item is-success"
-              tabindex="0"
-            >
+            <li v-for="(fileList, index) in fileListGM" :key="index" class="el-upload-list__item is-success"
+              tabindex="0">
               <a class="el-upload-list__item-name">
                 <i class="el-icon-document"> </i>{{ fileList.name }}
               </a>
-              <label
-                style="display:block;position:absolute;top:1px;right:20px;"
-              >
-                <a style="cursor:pointer;" @click="downLoad(fileList.url)"
-                  >下载附件</a
-                >
+              <label style="display:block;position:absolute;top:1px;right:20px;">
+                <a style="cursor:pointer;" @click="downLoad(fileList.url)">下载附件</a>
               </label>
             </li>
           </ul>
         </div>
         <div style="margin:0 auto; text-align: center;">
-          <el-button
-            :disabled="btnDisable"
-            v-if="newORedit"
-            type="success"
-            @click="submitEDIT"
-            >修改并提交</el-button
-          >
-          <el-button
-            :disabled="btnDisable"
-            v-else-if="!EDITorCHECK"
-            type="success"
-            @click="sumbitNEW"
-            >提交</el-button
-          >
+          <el-button :disabled="btnDisable" v-if="newORedit" type="success" @click="submitEDIT">修改并提交</el-button>
+          <el-button :disabled="btnDisable" v-else-if="!EDITorCHECK" type="success" @click="sumbitNEW">提交</el-button>
         </div>
       </div>
     </el-dialog>

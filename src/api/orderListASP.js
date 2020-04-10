@@ -200,6 +200,14 @@ export function getCompanyInfo(data, config = {}) {
         return Promise.reject(err);
     })
 }
+//获取单据下单数量
+export function GetQtyDelivery(data, config = {}) {
+    return post('/PACK_DETAIL/GetQtyDelivery', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
 //获取对账单
 export function GetBalancePeriod(data, config = {}) {
     return post('/CUSTOMER_BALANCE_PERIOD/GetBalancePeriod', data, config).then((res) => {
@@ -211,6 +219,34 @@ export function GetBalancePeriod(data, config = {}) {
 //获取并更新快递状态
 export function GetPackExpressState(data, config = {}) {
     return post('/PACK_DETAIL/GetPackExpressState', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+export function GetBuyUserInfo(data, config = {}) {
+    return post('/BUYUSER_INFO/GetBuyUserInfo', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+export function InsertBuyUser(data, config = {}) {
+    return post('/BUYUSER_INFO/InsertBuyUser', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+export function UpdateBuyUser(data, config = {}) {
+    return post('/BUYUSER_INFO/UpdateBuyUser', data, config).then((res) => {
+        return Promise.resolve(res);
+    }).catch((err) => {
+        return Promise.reject(err);
+    })
+}
+export function DeleteBuyUser(data, config = {}) {
+    return post('/BUYUSER_INFO/DeleteBuyUser', data, config).then((res) => {
         return Promise.resolve(res);
     }).catch((err) => {
         return Promise.reject(err);

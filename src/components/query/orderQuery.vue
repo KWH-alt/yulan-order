@@ -1,16 +1,15 @@
 <template>
   <div id="orderQuery">
     <el-card shadow="hover">
-      <el-dialog
-      width="40%"
-      style="height:100%"
-      :visible.sync = "showOrder"
-      >
-      <div style="font-size:18px">
-        <div>客户名称：{{get_CUSTOMER_NAME}}
-          <span style="color:blue;margin-left:10px">汇总金额:{{getMoney}}元</span>
+      <el-dialog width="40%" style="height:100%" :visible.sync="showOrder">
+        <div style="font-size:18px">
+          <div>
+            客户名称：{{ get_CUSTOMER_NAME }}
+            <span style="color:blue;margin-left:10px"
+              >汇总金额:{{ getMoney }}元</span
+            >
+          </div>
         </div>
-      </div>
         <div>
           <el-table
             :data="tableData"
@@ -88,24 +87,23 @@
               :total="count"
             ></el-pagination>
           </div>
-        </div>   
+        </div>
         <el-dialog
-        :show-close="true"
-        :visible.sync="dialogVisible_1"
-        width="70%"
-        top="5vh"
-        append-to-body
-      >
-        <keep-alive>
-          <checkExamine
-            v-if="dialogVisible_1"
-            :isShowButton="false"
-            :ruleForm="ruleForm"
-          >
-          </checkExamine>
-        </keep-alive>
-      </el-dialog>
-
+          :show-close="true"
+          :visible.sync="dialogVisible_1"
+          width="70%"
+          top="5vh"
+          append-to-body
+        >
+          <keep-alive>
+            <checkExamine
+              v-if="dialogVisible_1"
+              :isShowButton="false"
+              :ruleForm="ruleForm"
+            >
+            </checkExamine>
+          </keep-alive>
+        </el-dialog>
       </el-dialog>
       <el-dialog
         title="客户详情"
@@ -114,40 +112,42 @@
         style="height:70%"
       >
         <div style="margin:0,auto">
-          <el-card>
-            <TABLE class="table_2">
-              <tr>
-                <td>客户名称:</td>
-                <td>{{ customerInfo.CUSTOMER_NAME }}</td>
-              </tr>
-              <tr>
-                <td>联系人：</td>
-                <td>{{customerInfo.LINKPERSON }}</td>
-              </tr>
-              <tr>
-                <td>电话：</td>
-                <td>{{ customerInfo.TELEPHONE }}</td>
-              </tr>
-              <tr>
-                <td>地址：</td>
-                <td>{{ customerInfo.POST_ADDRESS }}</td>
-              </tr>
-              <tr>
-                <td style="width:150px">优惠券余额：</td>
-                <td v-for="item of couponData" :key="item.index">
-                  当前余额 {{ item.rebateMoneyOver }}元
-                </td>
-              </tr>
-              <tr>
-                <td>客户余额：</td>
-                <td>{{ moneySituation }}</td>
-              </tr>
-            </TABLE>
-          </el-card>
+          <table class="table_2">
+            <tr>
+              <td>客户名称:</td>
+              <td>{{ customerInfo.CUSTOMER_NAME }}</td>
+            </tr>
+            <tr>
+              <td>联系人：</td>
+              <td>{{ customerInfo.LINKPERSON }}</td>
+            </tr>
+            <tr>
+              <td>电话：</td>
+              <td>{{ customerInfo.TELEPHONE }}</td>
+            </tr>
+            <tr>
+              <td>地址：</td>
+              <td>{{ customerInfo.POST_ADDRESS }}</td>
+            </tr>
+            <tr>
+              <td style="width:150px">优惠券余额：</td>
+              <td v-if="couponData.length">
+                <span v-for="item of couponData" :key="item.index">
+                  {{ item.rebateMoneyOver }}元
+                </span>
+              </td>
+              <td v-else>
+                <span style="color:red;">当前年度无优惠券</span>
+              </td>
+            </tr>
+            <tr>
+              <td>客户余额：</td>
+              <td>{{ moneySituation }}</td>
+            </tr>
+          </table>
         </div>
       </el-dialog>
-      
-   
+
       <div class="ff">
         <!-- <el-tabs class="tabs_1"  v-model="activeName" style="width:1340px">
           <el-tab-pane label="区域订单查询" name="first_1"> -->
@@ -197,7 +197,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="开始日期区间"
-                  v-model="ruleForm_1.dateValue"
+                  v-model="date1"
                   @change="getCustomerChangTime"
                   style="width:210px"
                 ></el-date-picker>
@@ -207,7 +207,7 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   placeholder="结束日期区间"
-                  v-model="ruleForm_2.dateValue"
+                  v-model="date2"
                   @change="getCustomerChangTime"
                   style="width:210px;margin-left:12px"
                 ></el-date-picker>
@@ -259,7 +259,9 @@
                     style="margin-left:65px"
                     >查询</el-button
                   >
-                  <el-checkbox v-model="checked" style="margin-left:150px">仅有效客户</el-checkbox>
+                  <el-checkbox v-model="checked" style="margin-left:150px"
+                    >仅有效客户</el-checkbox
+                  >
                 </div>
               </div>
             </div>
@@ -287,11 +289,10 @@
         </form>
         <hr />
         <div v-if="query_1">
-          <div style="float:left;font-size:15px;color:blue;margin:10px">订单金额汇总：{{(moneySum).toFixed(2)}}元</div>
-          <el-table
-          :data="CUSTOMERED"
-          border
-          class="table_1">
+          <div style="float:left;font-size:15px;color:blue;margin:10px">
+            订单金额汇总：{{ moneySum.toFixed(2) }}元
+          </div>
+          <el-table :data="CUSTOMERED" border class="table_1">
             <el-table-column prop="num" width="58" align="center" label="序号">
               <template slot-scope="scope"
                 ><span
@@ -299,12 +300,8 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="客户代码"
-              align="center"
-              width="120px"
-            >
-            <template slot-scope="scope1">
+            <el-table-column label="客户代码" align="center" width="120px">
+              <template slot-scope="scope1">
                 <el-button
                   size="mini"
                   @click="openDetail_1(scope1.row)"
@@ -323,17 +320,9 @@
                 >
               </template>
             </el-table-column>
-            <el-table-column
-              prop="TASK"
-              label="目标任务"
-              align="center"
-            >
+            <el-table-column prop="TASK" label="目标任务" align="center">
             </el-table-column>
-            <el-table-column
-              prop="ORDER_MONEY"
-              label="订单总额"
-              align="center"
-            >
+            <el-table-column prop="ORDER_MONEY" label="订单总额" align="center">
             </el-table-column>
             <el-table-column
               prop="TASK_MONEY_DF"
@@ -345,13 +334,16 @@
               prop="flag"
               label="任务完成标记"
               align="center"
-              :filters="[{text: '未完成', value: ''}, {text: '已完成', value: '完成'}]"
+              :filters="[
+                { text: '未完成', value: '' },
+                { text: '已完成', value: '完成' }
+              ]"
               :filter-method="filterHandler"
             >
             </el-table-column>
           </el-table>
         </div>
-        
+
         <!-- </el-tab-pane>
         </el-tabs> -->
       </div>
@@ -374,8 +366,11 @@ import {
   getPackDetails,
   getCustomerName
 } from "@/api/areaInfoASP";
-import { getOrderByAreaCustomer,getOrderInfoByCustomer } from "@/api/orderInfoASP";
-import Vue from 'vue'
+import {
+  getOrderByAreaCustomer,
+  getOrderInfoByCustomer
+} from "@/api/orderInfoASP";
+import Vue from "vue";
 import Cookies from "js-cookie";
 const Head = "http://14.29.223.114:10250/upload";
 const Quest = "http://14.29.223.114:10250/yulan-capital";
@@ -383,25 +378,25 @@ export default {
   name: "OrderQuery",
   data() {
     return {
-      getSomeData:[],
-      get_customer_code:"",
-      getMoney:"",
-      get_CUSTOMER_NAME:"",
-      showOrder:false,
-      flag:0,
-      get_CUSTOMER_NAME:"",
-      date1:"",
-      date2:"",
+      getSomeData: [],
+      get_customer_code: "",
+      getMoney: "",
+      get_CUSTOMER_NAME: "",
+      showOrder: false,
+      flag: 0,
+      get_CUSTOMER_NAME: "",
+      date1: "",
+      date2: "",
       assignments: "",
       assignmentsTarget: "",
       assignmentsReduce: "",
       tableHead1: "",
       tableHead2: "",
       tableHead3: "",
-      moneySum:0,
-      CUSTOMERED : [],
-      CUSTOMERED_1 : [],
-      checked:true,
+      moneySum: 0,
+      CUSTOMERED: [],
+      CUSTOMERED_1: [],
+      checked: true,
       button_1: false,
       ruleForm: {},
       cid: "",
@@ -427,15 +422,13 @@ export default {
       value1: "",
       value2: "",
       beginTime_1: "",
-      ruleForm_1: { dateValue: "" },
       finishTime_1: "",
-      ruleForm_2: { dateValue: "" },
       AREA_DISTRICT: [],
-      AREA_DISTRICT_1:[
+      AREA_DISTRICT_1: [
         {
           DISTRICT_ID: "",
           DISTRICT_NAME: "全部"
-        },
+        }
       ],
       customer_main: [
         {
@@ -568,28 +561,34 @@ export default {
   //页面加载时候，在mounted中进行赋值
   mounted() {
     // 初始化查询，默认为前一天
-    this.ruleForm_1.dateValue = this.timeDefault_1;
-    this.ruleForm_2.dateValue = this.timeDefault_2;
+    this.date1 = this.timeDefault_1;
+    this.date2 = this.timeDefault_2;
   },
-  computed: {    
-    timeDefault_1() {      
-      var date = new Date();      
-      var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + "01";
-      return s1;    
-      },
-    
-    timeDefault_2() {      
-      var date = new Date();      
-      var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate());      
-      return s1;    
-      }  
+  computed: {
+    timeDefault_1() {
+      var date = new Date();
+      var month = date.getMonth() + 1;
+      if (month < 10) month = "0" + month;
+      var s1 = date.getFullYear() + "-" + month + "-" + "01";
+      return s1;
+    },
+
+    timeDefault_2() {
+      var date = new Date();
+      var month = date.getMonth() + 1;
+      if (month < 10) month = "0" + month;
+      var day = date.getDate();
+      if (day < 10) day = "0" + day;
+      var s1 = date.getFullYear() + "-" + month + "-" + day;
+      return s1;
+    }
   },
   methods: {
     filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
-      },
-      
+      const property = column["property"];
+      return row[property] === value;
+    },
+
     openDialog(val) {
       this.cid = Cookies.get("cid");
       this.order_no = val;
@@ -615,7 +614,7 @@ export default {
         cid: this.cid,
         companyId: this.customerInfo.CUSTOMER_CODE
       });
-      this.moneySituation = "当前余额 " + res.data + "元";
+      this.moneySituation = res.data + "元";
       var url = "/order/findRebate.do";
       var data = {
         cid: Cookies.get("cid"),
@@ -623,6 +622,10 @@ export default {
       };
       var res2 = await manageCoupon(url, data);
       this.couponData = res2.data;
+      var nowYear = new Date().getFullYear();
+      this.couponData = this.couponData.filter(
+        item => item.id.indexOf(nowYear) > -1
+      );
       this.dialogVisible = true;
     },
 
@@ -635,16 +638,15 @@ export default {
       var data = {
         userid: userInfo.loginName
       };
-      getAreaCode(data)
-        .then(res => {
-          this.AREACODE = res.data;
-          if(this.AREACODE.length == 0){
-              this.$alert("没有区域权限，请联系管理员配置", "提示", {
-              confirmButtonText: "确定",
-              type: "success"
-            });
-          }
-        })
+      getAreaCode(data).then(res => {
+        this.AREACODE = res.data;
+        if (this.AREACODE.length == 0) {
+          this.$alert("没有区域权限，请联系管理员配置", "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+        }
+      });
     },
     //根据市场区域查片区
     areaCode(val) {
@@ -657,7 +659,7 @@ export default {
       this.first = val;
       getDistrictByAreaCode(data).then(res => {
         this.AREA_DISTRICT = res.data;
-        this.AREA_DISTRICT.push.apply(this.AREA_DISTRICT,this.AREA_DISTRICT_1)
+        this.AREA_DISTRICT.push.apply(this.AREA_DISTRICT, this.AREA_DISTRICT_1);
       });
       this._getCustomerByAreaCode_1(val);
     },
@@ -692,9 +694,9 @@ export default {
     _getCustomerByAreaCode_1(val) {
       this.customerData = [];
       var data = {
-        beginTime:this.ruleForm_1.dateValue,
-        finishTime:this.ruleForm_2.dateValue,
-        isall:this.checked,
+        beginTime: this.date1,
+        finishTime: this.date2,
+        isall: this.checked,
         areaCode: val, //市场
         district: this.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -706,9 +708,9 @@ export default {
     _getCustomerByAreaCode_2(val) {
       this.customerData = [];
       var data = {
-        beginTime:this.ruleForm_1.dateValue,
-        finishTime:this.ruleForm_2.dateValue,
-        isall:this.checked,
+        beginTime: this.date1,
+        finishTime: this.date2,
+        isall: this.checked,
         areaCode: val.areaCode, //市场
         district: val.AREA_DISTRICT, //片区
         customerType: this.customer_type //客户类型
@@ -720,9 +722,9 @@ export default {
     _getCustomerByAreaCode_3(val) {
       this.customerData = [];
       var data = {
-        beginTime:this.ruleForm_1.dateValue,
-        finishTime:this.ruleForm_2.dateValue,
-        isall:this.checked,
+        beginTime: this.date1,
+        finishTime: this.date2,
+        isall: this.checked,
         areaCode: val.areaCode, //市场
         district: val.district, //片区
         customerType: val.customerType //客户类型
@@ -731,29 +733,29 @@ export default {
         this.customerData = res.data;
       });
     },
-        //改变时间查可选用户
-    getCustomerChangTime(){
+    //改变时间查可选用户
+    getCustomerChangTime() {
       this.customerData = [];
       this.tableData = [];
       this.value_4 = [];
-      if(this.first == ""){
+      if (this.first == "") {
         this.$alert("未选择区域", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
+          confirmButtonText: "确定",
+          type: "success"
+        });
         return (this.tableData = []);
-      }else{
-      var data = {
-        beginTime:this.ruleForm_1.dateValue,
-        finishTime:this.ruleForm_2.dateValue,
-        isall:this.checked,
-        areaCode: this.first, //市场
-        district: this.second, //片区
-        customerType: this.third //客户类型
-      };
-      getCustomerByAreaCode(data).then(res => {
-        this.customerData = res.data;
-      });
+      } else {
+        var data = {
+          beginTime: this.date1,
+          finishTime: this.date2,
+          isall: this.checked,
+          areaCode: this.first, //市场
+          district: this.second, //片区
+          customerType: this.third //客户类型
+        };
+        getCustomerByAreaCode(data).then(res => {
+          this.customerData = res.data;
+        });
       }
     },
     //订单查询
@@ -765,141 +767,140 @@ export default {
       var loading = Vue.prototype.$loading({
         lock: true,
         text: "加载中...",
-        target: document.querySelector('.loading-area')//设置加载动画区域
-    });
+        target: document.querySelector(".loading-area") //设置加载动画区域
+      });
       //this.typeFilter=[],
       this.tableData = [];
-      this.query_1 = false
+      this.query_1 = false;
       this.CUSTOMERED = [];
       this.CUSTOMERED_1 = [];
-      this.date1="",
-      this.date2="",
-      this.assignments= "",
-      this.assignmentsTarget= "",
-      this.assignmentsReduce= "",
-      this.tableHead1= "",
-      this.tableHead2= "",
-      this.tableHead3= "",
-      this.moneySum=0,
-      this.flag = 0,
-      this. date1 = this.ruleForm_1.dateValue.slice(0, 4) + "-" + (this.ruleForm_1.dateValue.slice(5, 7))
-      this. date2 = this.ruleForm_2.dateValue.slice(0, 4) + "-" + (this.ruleForm_2.dateValue.slice(5, 7))
-      
+      (this.assignments = ""),
+        (this.assignmentsTarget = ""),
+        (this.assignmentsReduce = ""),
+        (this.tableHead1 = ""),
+        (this.tableHead2 = ""),
+        (this.tableHead3 = ""),
+        (this.moneySum = 0),
+        (this.flag = 0);
       let year = this.date1.slice(0, 4);
       let endYear = this.date2.slice(0, 4);
       let month = this.date1.slice(5, 7);
       let endMonth = this.date2.slice(5, 7);
       if (this.value_4.length == 0) {
-          loading.close();
-            this.$alert("未选择用户", "提示", {
-            confirmButtonText: "确定",
-            type: "success"
-          });
-        
+        loading.close();
+        this.$alert("未选择用户", "提示", {
+          confirmButtonText: "确定",
+          type: "success"
+        });
       } else {
         for (var i = 0; i < this.value_4.length; i++) {
-      this.date1=""
-      this.date2=""
-      this.assignments= ""
-      this.assignmentsTarget= ""
-      this.assignmentsReduce= ""
-      this.tableHead1= ""
-      this.tableHead2= ""
-      this.tableHead3= ""
-          var res = await  GetTaskProgress({
-            companyId:this.value_4[i],
-            year:year,
-            endYear:endYear,
-            month:month,
-            endMonth:endMonth,
-            cid: Cookies.get("cid"),
-          },{ loading: false })
+          this.assignments = "";
+          this.assignmentsTarget = "";
+          this.assignmentsReduce = "";
+          this.tableHead1 = "";
+          this.tableHead2 = "";
+          this.tableHead3 = "";
+          var res = await GetTaskProgress(
+            {
+              companyId: this.value_4[i],
+              year: year,
+              endYear: endYear,
+              month: month,
+              endMonth: endMonth,
+              cid: Cookies.get("cid")
+            },
+            { loading: false }
+          );
           let zoom = res.data[0].orders;
-          
-        let reduce = 0;
-        for (let i = 0; i < zoom.length; i++) {
-          zoom[i].sumMoney =
-            zoom[i].ALL_SPEND + zoom[i].ALLBACK_Y + zoom[i].ALLBACK_M;
-          reduce += zoom[i].ALL_SPEND;
-        }
-        //this.tableData = zoom;
-        if (res.data[0].assignments) {
-          this.assignments = res.data[0].assignments.ASSIGNMENTS;
-          this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
-          this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(2);
-          var selectMonth = "";
-      if (this.date1 == this.date2) {
-        selectMonth = this.date1.slice(5, 7) + "月";
-      } else if (this.date1.slice(0, 4) == this.date2.slice(0, 4)) {
-        selectMonth =
-          this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
-      } else {
-        selectMonth =
-          this.date1.slice(0, 4) +
-          "." +
-          this.date1.slice(5, 7) +
-          "-" +
-          this.date2.slice(0, 4) +
-          "." +
-          this.date2.slice(5, 7) +
-          "月总";
-      }
-      this.date1 == this.date2
-        ? this.date1.slice(5, 7) + "月"
-        : this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
+
+          let reduce = 0;
+          for (let i = 0; i < zoom.length; i++) {
+            zoom[i].sumMoney =
+              zoom[i].ALL_SPEND + zoom[i].ALLBACK_Y + zoom[i].ALLBACK_M;
+            reduce += zoom[i].ALL_SPEND;
+          }
+          if (reduce == 0) continue;
+          if (res.data[0].assignments) {
+            this.assignments = res.data[0].assignments.ASSIGNMENTS;
+            this.assignmentsTarget = res.data[0].assignments.ASSIGNMENTS_TARGET;
+            this.assignmentsReduce = (this.assignmentsTarget - reduce).toFixed(
+              2
+            );
+            var selectMonth = "";
+            if (this.date1 == this.date2) {
+              selectMonth = this.date1.slice(5, 7) + "月";
+            } else if (this.date1.slice(0, 4) == this.date2.slice(0, 4)) {
+              selectMonth =
+                this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
+            } else {
+              selectMonth =
+                this.date1.slice(0, 4) +
+                "." +
+                this.date1.slice(5, 7) +
+                "-" +
+                this.date2.slice(0, 4) +
+                "." +
+                this.date2.slice(5, 7) +
+                "月总";
+            }
+            this.date1 == this.date2
+              ? this.date1.slice(5, 7) + "月"
+              : this.date1.slice(5, 7) + "-" + this.date2.slice(5, 7) + "月总";
             this.tableHead1 = `${selectMonth}协议月任务：${this.assignments}`;
-            this.tableHead2 = `${(this.assignmentsTarget).toFixed(2)}`;
+            this.tableHead2 = `${this.assignmentsTarget.toFixed(2)}`;
             this.tableHead3 = `${this.assignmentsReduce}`;
-        } else {
-          this.tableHead1 = "所选月无任务";
-        }
-        if(this.tableHead2>0 && this.tableHead3<=0){
-          this.flag = "完成"
-        }else{
-          this.flag = ""
-        }
-        if(!this.tableHead2){
-          this.tableHead2 = "无任务"
-        }
-        var res1 = await  getCustomerName({customer:this.value_4[i]},{ loading: false })
-          this.get_CUSTOMER_NAME = res1.data[0]
-        var res2 = await getOrderInfoByCustomer({
-          customer: this.value_4[i], //已选用户
-        },{ loading: false })
-        this.getSomeData = res2.data[0]
-        if(res2.data.length == 0){
-          // this.$alert("选择客户无订单", "提示", {
-          //   confirmButtonText: "确定",
-          //   type: "success"
-          // });
-          continue
-        }
-        var sum = this.moneySum + reduce
-        this.moneySum = sum
-          this.CUSTOMERED_1[i] = await {
+          } else {
+            this.tableHead1 = "所选月无任务";
+          }
+          if (this.tableHead2 > 0 && this.tableHead3 <= 0) {
+            this.flag = "完成";
+          } else {
+            this.flag = "";
+          }
+          if (!this.tableHead2) {
+            this.tableHead2 = "无任务";
+          }
+          var res1 = await getCustomerName(
+            { customer: this.value_4[i] },
+            { loading: false }
+          );
+          this.get_CUSTOMER_NAME = res1.data[0];
+          var res2 = await getOrderInfoByCustomer(
+            {
+              customer: this.value_4[i] //已选用户
+            },
+            { loading: false }
+          );
+          this.getSomeData = res2.data[0];
+          if (res2.data.length == 0) {
+            continue;
+          }
+          var sum = this.moneySum + reduce;
+          this.moneySum = sum;
+          this.CUSTOMERED_1.push({
             CUSTOMER_CODE: this.value_4[i],
             CUSTOMER_NAME: this.get_CUSTOMER_NAME.CUSTOMER_NAME,
-            TASK:this.tableHead2,
-            ORDER_MONEY:(reduce).toFixed(2),
-            TASK_MONEY_DF:this.tableHead3,
-            flag:this.flag,
-            LINKPERSON:this.getSomeData.LINKPERSON,
-            TELEPHONE:this.getSomeData.TELEPHONE,
-            POST_ADDRESS:this.getSomeData.POST_ADDRESS,
+            TASK: this.tableHead2,
+            ORDER_MONEY: reduce.toFixed(2),
+            TASK_MONEY_DF: this.tableHead3,
+            flag: this.flag,
+            LINKPERSON: this.getSomeData.LINKPERSON,
+            TELEPHONE: this.getSomeData.TELEPHONE,
+            POST_ADDRESS: this.getSomeData.POST_ADDRESS
             //MONEYSUM:this.moneySum.MONEYSUM
-          }
+          });
         }
 
-        this.CUSTOMERED = this.CUSTOMERED_1 
+        this.CUSTOMERED = this.CUSTOMERED_1;
 
-        if(this.CUSTOMERED.length == 0){
+        if (this.CUSTOMERED.length == 0) {
           loading.close();
           this.$alert("选择客户无订单", "提示", {
             confirmButtonText: "确定",
             type: "success"
           });
 
-          return this.query_1 = false
+          return (this.query_1 = false);
         }
         // for(var i = 0; i < this.CUSTOMERED.length;i++){
         //    var money = parseInt(this.CUSTOMERED[i].ORDER_MONEY)
@@ -911,8 +912,8 @@ export default {
         // var data = {
         //   type:this.typeFilter,//类型筛选
         //   costomerCodes: this.value_4, //已选用户
-        //   beginTime: this.ruleForm_1.dateValue, //起始时间
-        //   finishTime: this.ruleForm_2.dateValue, //结束时间
+        //   beginTime: this.date1, //起始时间
+        //   finishTime: this.date2, //结束时间
         //   limit: this.limit, //限制数
         //   page: this.currentPage, //页数
         //   status: this.status_info //状态
@@ -933,41 +934,40 @@ export default {
         //     //this._getPackDetailsType();
         //     this._getTotalMoneySum(data)
         //   }
-          
+
         // });
       }
-      
     },
-    openDetail_1(val){
+    openDetail_1(val) {
       this.currentPage = 1;
-      this.get_CUSTOMER_NAME = val.CUSTOMER_NAME
-      this.getMoney = val.ORDER_MONEY
-      this.get_customer_code = val.CUSTOMER_CODE
-      this.openDetail()
+      this.get_CUSTOMER_NAME = val.CUSTOMER_NAME;
+      this.getMoney = val.ORDER_MONEY;
+      this.get_customer_code = val.CUSTOMER_CODE;
+      this.openDetail();
     },
-    openDetail(){
+    openDetail() {
       this.tableData = [];
       var data = {
-          customerCode: this.get_customer_code, //已选用户
-          beginTime: this.ruleForm_1.dateValue, //起始时间
-          finishTime: this.ruleForm_2.dateValue, //结束时间
-          limit: this.limit, //限制数
-          page: this.currentPage, //页数
-          status: this.status_info //状态
-        };
-        if (!data.beginTime) {
-          data.beginTime = "0001/1/1";
-        }
-        if (!data.finishTime) {
-          data.finishTime = "9999/12/31";
-        } else {
-          data.finishTime = data.finishTime;
-        }
-        getOrderByAreaCustomer(data).then(res => {
-          this.count = res.count;
-          this.tableData = res.data;
-          this.showOrder = true
-        });
+        customerCode: this.get_customer_code, //已选用户
+        beginTime: this.date1, //起始时间
+        finishTime: this.date2, //结束时间
+        limit: this.limit, //限制数
+        page: this.currentPage, //页数
+        status: this.status_info //状态
+      };
+      if (!data.beginTime) {
+        data.beginTime = "0001/1/1";
+      }
+      if (!data.finishTime) {
+        data.finishTime = "9999/12/31";
+      } else {
+        data.finishTime = data.finishTime;
+      }
+      getOrderByAreaCustomer(data).then(res => {
+        this.count = res.count;
+        this.tableData = res.data;
+        this.showOrder = true;
+      });
     },
     // queryQuYu_1() {
     //   this.query_1 = true;
@@ -981,8 +981,8 @@ export default {
     //   } else {
     //     var data = {
     //       costomerCodes: this.value_4, //已选用户
-    //       beginTime: this.ruleForm_1.dateValue, //起始时间
-    //       finishTime: this.ruleForm_2.dateValue, //结束时间
+    //       beginTime: this.date1, //起始时间
+    //       finishTime: this.date2, //结束时间
     //       limit: this.limit, //限制数
     //       page: this.currentPage, //页数
     //       status: this.status_info //状态
@@ -1010,10 +1010,9 @@ export default {
 
     //重置
     reset() {
-      this.query_1 = false
-      this.moneySum="0"
-      this.CUSTOMERED=[],
-      this.checked=true
+      this.query_1 = false;
+      this.moneySum = "0";
+      (this.CUSTOMERED = []), (this.checked = true);
       this.currentPage = 1;
       this.customerData = [];
       this.beginTime_1 = "";
@@ -1081,8 +1080,8 @@ export default {
         (this.count = 0);
       Cookies.set("ORDER_NO", 0);
       this._getAreaCode();
-      this.ruleForm_1.dateValue = this.timeDefault_1;
-      this.ruleForm_2.dateValue = this.timeDefault_2;
+      this.date1 = this.timeDefault_1;
+      this.date2 = this.timeDefault_2;
     }
   }
 };
@@ -1122,15 +1121,16 @@ export default {
 .table_2 {
   font-size: 20px;
 }
+.table_2 td {
+  padding: 3px;
+}
 .gx {
   background: #8bc34a;
   color: rgb(255, 255, 255);
 }
-
 .CONDITION_DIV_TABLE2 {
   height: 100px;
 }
-
 .cz {
   text-align: center;
 }
@@ -1163,7 +1163,6 @@ export default {
 .OPTION0 {
   background: rgb(209, 243, 200);
 }
-
 .cx_2 {
   margin-left: 10px;
   background: #8bc34a;
