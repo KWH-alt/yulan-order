@@ -737,7 +737,6 @@ export default {
       this.customerData = [];
       this.tableData = [];
       this.value_4 = [];
-      this.query_1 = false;
       if(this.first == ""){
         this.$alert("未选择市场区域", "提示", {
             confirmButtonText: "确定",
